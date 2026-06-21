@@ -2080,7 +2080,7 @@ function shakeMachine() {
 function renderCard(data) {
   const posesHTML = data.poses.map((p, i) => {
     const illHTML = p.imgUrl
-      ? `<img src="${p.imgUrl}" alt="姿势${i+1}" loading="eager" style="object-fit:cover" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+      ? `<img src="${p.imgUrl}" alt="姿势${i+1}" loading="eager" style="object-fit:cover" onclick="event.stopPropagation();openLightbox(this.src)" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
          <svg viewBox="0 0 80 120" style="display:none"><use href="#ill-${p.ill}"/></svg>`
       : `<svg viewBox="0 0 80 120"><use href="#ill-${p.ill}"/></svg>`;
 
@@ -2220,15 +2220,11 @@ document.addEventListener('keydown', function(e) {
 const imgLightbox = document.getElementById('imgLightbox');
 const lbImg        = document.getElementById('lbImg');
 
-// 卡片内点击图片 → 放大
-cardModal.addEventListener('click', function(e) {
-  const img = e.target.closest('.pose-illustration img');
-  if (!img) return;
-  e.stopPropagation();
-  lbImg.src = img.src;
+function openLightbox(src) {
+  lbImg.src = src;
   imgLightbox.classList.add('active');
   document.body.style.overflow = 'hidden';
-});
+}
 
 function closeLightbox(e) {
   if (e && e.target !== imgLightbox && e.target !== imgLightbox.querySelector('.lb-close')) return;
