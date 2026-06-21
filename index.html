@@ -2033,7 +2033,7 @@ function shakeMachine() {
 function renderCard(data) {
   const posesHTML = data.poses.map((p, i) => {
     const illHTML = p.imgUrl
-      ? `<img src="${p.imgUrl}" alt="姿势${i+1}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+      ? `<img src="${p.imgUrl}" alt="姿势${i+1}" loading="eager" style="object-fit:cover" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
          <svg viewBox="0 0 80 120" style="display:none"><use href="#ill-${p.ill}"/></svg>`
       : `<svg viewBox="0 0 80 120"><use href="#ill-${p.ill}"/></svg>`;
 
