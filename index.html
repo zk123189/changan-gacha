@@ -1,0 +1,2643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>长安汉服出片扭蛋机</title>
+<style>
+/* ============================================================
+   CSS Custom Properties — 新中式国潮配色系统
+   ============================================================ */
+:root {
+  --red:       #FF461F;
+  --red-dark:  #D93A16;
+  --yellow:    #FFB61E;
+  --gold:      #D4A84B;
+  --gold-light:#F5E6C8;
+  --navi-blue: #1678FF;
+  --bg-paper:  #F5F0E8;
+  --ink:       #3D2B1F;
+  --ink-light: #6B5A4E;
+  --white:     #FFFEF9;
+  --shadow:    0 4px 20px rgba(61,43,31,0.12);
+  --shadow-lg: 0 12px 40px rgba(61,43,31,0.18);
+  --radius:    12px;
+  --radius-lg: 20px;
+  --font-serif: "Noto Serif SC", "Source Han Serif SC", "STSong", "SimSun", "KaiTi", serif;
+  --font-display: "Noto Serif SC", "STZhongsong", "SimSun", "KaiTi", serif;
+}
+
+/* ============================================================
+   Reset & Base
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-serif);
+  background-color: #EDE8DC;
+  color: var(--ink);
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-x: hidden;
+  /* 宣纸纹理：多层径向渐变模拟纤维 + 细微噪点 */
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(139,119,90,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(139,119,90,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(139,119,90,0.05) 0%, transparent 55%),
+    radial-gradient(circle at 30% 30%, rgba(200,180,140,0.08) 0%, transparent 40%),
+    radial-gradient(circle at 70% 70%, rgba(200,180,140,0.06) 0%, transparent 40%),
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(180,160,120,0.03) 2px, rgba(180,160,120,0.03) 4px);
+  background-attachment: fixed;
+}
+
+/* ============================================================
+   Main Container
+   ============================================================ */
+.container {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 24px 16px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* ============================================================
+   Header
+   ============================================================ */
+.header {
+  text-align: center;
+  padding: 16px 0 8px;
+}
+
+.header .title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 7vw, 36px);
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: 4px;
+  text-shadow: 1px 1px 0 rgba(255,182,30,0.3);
+  line-height: 1.3;
+}
+
+.header .subtitle {
+  font-size: clamp(13px, 3.5vw, 15px);
+  color: var(--ink-light);
+  letter-spacing: 6px;
+  margin-top: 8px;
+}
+
+.header .divider {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 12px auto 0;
+  border-radius: 1px;
+}
+
+/* ============================================================
+   Gacha Stage — 扭蛋机主舞台
+   ============================================================ */
+.gacha-stage {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  height: 320px;
+  margin: 20px auto 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Gacha Machine Body --- */
+.gacha-machine {
+  position: relative;
+  width: 200px;
+  height: 240px;
+  z-index: 2;
+  cursor: default;
+}
+
+/* 底座 */
+.gacha-base {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 180px;
+  height: 24px;
+  background: linear-gradient(180deg, #C8963E 0%, #8B6914 40%, #A07828 100%);
+  border-radius: 8px 8px 20px 20px;
+  box-shadow: 0 4px 12px rgba(61,43,31,0.25);
+}
+
+/* 主体签筒 */
+.gacha-body {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 190px;
+  background: linear-gradient(180deg,
+    var(--red) 0%,
+    #E83A18 15%,
+    var(--red-dark) 50%,
+    #C42E10 85%,
+    #8B1A08 100%);
+  border-radius: 18px 18px 24px 24px;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.15),
+    inset 0 -4px 8px rgba(0,0,0,0.2),
+    0 8px 24px rgba(61,43,31,0.3);
+  overflow: hidden;
+}
+
+/* 签筒装饰纹 */
+.gacha-body::before {
+  content: '';
+  position: absolute;
+  top: 16px; left: 10px; right: 10px; bottom: 16px;
+  border: 2px solid rgba(255,182,30,0.4);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+/* 签筒装饰菱形 */
+.gacha-body::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  width: 40px; height: 40px;
+  border: 2px solid rgba(255,182,30,0.5);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+/* 签筒窗口 */
+.gacha-window {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.3) 100%);
+  border-radius: 50%;
+  border: 3px solid var(--gold);
+  box-shadow:
+    inset 0 0 20px rgba(255,182,30,0.3),
+    0 0 15px rgba(255,182,30,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.gacha-window-inner {
+  font-size: 36px;
+  animation: windowGlow 2s ease-in-out infinite;
+}
+
+@keyframes windowGlow {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.4) drop-shadow(0 0 6px rgba(255,182,30,0.8)); }
+}
+
+/* 顶部旋钮 */
+.gacha-knob {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 44px;
+  height: 44px;
+  background: radial-gradient(circle at 40% 35%, #F5E6C8, #D4A84B 60%, #8B6914 100%);
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(61,43,31,0.3);
+  z-index: 4;
+}
+
+.gacha-knob::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px; height: 12px;
+  background: var(--red-dark);
+  border-radius: 50%;
+}
+
+/* 侧面把手 */
+.gacha-handle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 56px;
+  z-index: 5;
+}
+
+.gacha-handle::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 20px;
+  background: linear-gradient(180deg, #D4A84B, #8B6914);
+  border-radius: 4px;
+}
+
+.gacha-handle::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 28px;
+  background: radial-gradient(circle at 40% 35%, #F5E6C8, #D4A84B 60%, #8B6914 100%);
+  border-radius: 50%;
+  box-shadow: 0 3px 8px rgba(61,43,31,0.3);
+}
+
+/* 出签口 */
+.gacha-chute {
+  position: absolute;
+  bottom: 38px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 18px;
+  background: linear-gradient(180deg, #3D1A0A, #1A0804);
+  border-radius: 0 0 10px 10px;
+  z-index: 3;
+}
+
+/* --- Petal Layer --- */
+.petal-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.petal {
+  position: absolute;
+  top: -20px;
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle at 30% 30%, #FFB6C1, #FF69B4 60%, #E75480 100%);
+  border-radius: 50% 0 50% 50%;
+  opacity: 0;
+  animation: petalFall var(--fall-duration, 3s) var(--fall-delay, 0s) ease-in forwards;
+  --sway: 30px;
+}
+
+.petal.gold {
+  background: radial-gradient(circle at 30% 30%, #FFE4A0, #FFB61E 60%, #D4A84B 100%);
+}
+
+.petal.pink {
+  background: radial-gradient(circle at 30% 30%, #FFD0D8, #FF8098 60%, #D9466A 100%);
+}
+
+@keyframes petalFall {
+  0% {
+    opacity: 1;
+    transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translateY(80px) translateX(var(--sway, 20px)) rotate(90deg) scale(0.9);
+  }
+  50% {
+    transform: translateY(180px) translateX(calc(var(--sway, 20px) * -0.5)) rotate(200deg) scale(0.8);
+  }
+  75% {
+    transform: translateY(260px) translateX(calc(var(--sway, 20px) * 0.7)) rotate(300deg) scale(0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(340px) translateX(0) rotate(420deg) scale(0.15);
+  }
+}
+
+/* --- Sparkle Layer --- */
+.sparkle-layer {
+  position: absolute;
+  inset: -40px;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.sparkle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #FFD700;
+  border-radius: 50%;
+  opacity: 0;
+  animation: sparkle 0.8s ease-out forwards;
+  box-shadow: 0 0 6px 2px rgba(255,215,0,0.8);
+}
+
+.sparkle.white {
+  background: #FFF;
+  box-shadow: 0 0 8px 2px rgba(255,255,255,0.9);
+}
+
+.sparkle.gold {
+  background: #FFB61E;
+  box-shadow: 0 0 6px 2px rgba(255,182,30,0.8);
+}
+
+@keyframes sparkle {
+  0% {
+    opacity: 0;
+    transform: scale(0) translate(0, 0);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.8) translate(var(--sx, 10px), var(--sy, -10px));
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0) translate(var(--ex, 40px), var(--ey, -60px));
+  }
+}
+
+/* ============================================================
+   Draw Button
+   ============================================================ */
+.draw-btn-wrap {
+  position: relative;
+  z-index: 5;
+  margin: 4px 0 16px;
+}
+
+.draw-btn {
+  display: inline-block;
+  padding: 16px 48px;
+  font-family: var(--font-display);
+  font-size: clamp(18px, 5vw, 22px);
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--white);
+  background: linear-gradient(135deg, var(--red) 0%, #E83A18 50%, var(--red-dark) 100%);
+  border: none;
+  border-radius: 50px;
+  box-shadow:
+    0 6px 24px rgba(255,70,31,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+  cursor: pointer;
+  animation: btnPulse 2.5s ease-in-out infinite;
+  transition: transform 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 按钮金色描边 */
+.draw-btn::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 53px;
+  background: linear-gradient(135deg, var(--yellow), var(--gold), var(--yellow), var(--gold-light), var(--yellow));
+  background-size: 300% 300%;
+  z-index: -1;
+  animation: goldShimmer 3s linear infinite;
+}
+
+.draw-btn::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+  z-index: -1;
+}
+
+@keyframes btnPulse {
+  0%, 100% {
+    box-shadow: 0 6px 24px rgba(255,70,31,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  50% {
+    box-shadow: 0 8px 36px rgba(255,70,31,0.65), inset 0 1px 0 rgba(255,255,255,0.25), 0 0 0 8px rgba(255,182,30,0.12);
+  }
+}
+
+@keyframes goldShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.draw-btn:active {
+  transform: scale(0.95);
+}
+
+.draw-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  animation: none;
+}
+
+/* 按钮下方提示 */
+.draw-hint {
+  text-align: center;
+  font-size: 12px;
+  color: var(--ink-light);
+  letter-spacing: 2px;
+  margin-top: 8px;
+}
+
+/* ============================================================
+   Count Badge
+   ============================================================ */
+.count-badge {
+  font-size: 12px;
+  color: var(--ink-light);
+  text-align: center;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.count-badge span {
+  color: var(--red);
+  font-weight: 700;
+}
+
+/* ============================================================
+   Card Modal
+   ============================================================ */
+.card-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(30,20,10,0.75);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  padding: 20px;
+}
+
+.card-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 卡片容器 */
+.card-wrapper {
+  width: 100%;
+  max-width: 360px;
+  max-height: 85vh;
+  max-height: 85dvh;
+  overflow-y: auto;
+  transform: scale(0.3);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.card-wrapper::-webkit-scrollbar { display: none; }
+
+.card-modal.active .card-wrapper {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* 卡片内芯 */
+.card {
+  background: var(--white);
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(212,168,75,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(212,168,75,0.04) 0%, transparent 50%);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px 20px;
+  box-shadow: var(--shadow-lg), 0 0 0 1px rgba(212,168,75,0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 卡片顶部装饰线 */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 24px; right: 24px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--red), var(--yellow), var(--red), transparent);
+  border-radius: 0 0 2px 2px;
+}
+
+/* 卡片角花 */
+.card::after {
+  content: '❖';
+  position: absolute;
+  bottom: 12px;
+  right: 18px;
+  font-size: 10px;
+  color: var(--gold);
+  opacity: 0.4;
+}
+
+/* --- 人设标签 --- */
+.card-persona {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-top: 4px;
+}
+
+.card-persona .label {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: clamp(26px, 7vw, 34px);
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: 4px;
+  padding: 6px 24px;
+  border: 2px solid var(--red);
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(255,70,31,0.04) 0%, transparent 100%);
+  position: relative;
+}
+
+.card-persona .label::before,
+.card-persona .label::after {
+  content: '◆';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 8px;
+  color: var(--gold);
+}
+
+.card-persona .label::before { left: -14px; }
+.card-persona .label::after  { right: -14px; }
+
+.card-persona .role-tag {
+  display: block;
+  font-size: 12px;
+  color: var(--gold);
+  letter-spacing: 6px;
+  margin-top: 6px;
+}
+
+/* --- 拍照姿势 --- */
+.card-section {
+  margin-bottom: 16px;
+}
+
+.card-section .section-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 3px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-section .section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+
+.card-poses {
+  list-style: none;
+  padding: 0;
+}
+
+.card-poses li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--ink);
+  border-bottom: 1px dashed rgba(212,168,75,0.25);
+}
+
+.card-poses li:last-child { border-bottom: none; }
+
+/* 姿势插画容器 — 相纸卡片风格 */
+.pose-illustration {
+  flex-shrink: 0;
+  width: 90px;
+  height: 120px;
+  border-radius: 10px;
+  background: var(--white);
+  border: 2px solid rgba(212,168,75,0.35);
+  box-shadow:
+    0 2px 10px rgba(61,43,31,0.10),
+    inset 0 0 0 3px var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 移除旧的内发光叠加层 — 新SVG自带背景 */
+.pose-illustration::after { content: none; }
+
+.pose-illustration svg {
+  width: 82px;
+  height: 112px;
+  filter: drop-shadow(1px 2px 3px rgba(61,43,31,0.12));
+  border-radius: 4px;
+}
+
+/* 外部图片支持（未来可替换为真人照片） */
+.pose-illustration img {
+  width: 82px;
+  height: 112px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* 姿势文字区 */
+.pose-text-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.pose-text-wrap .pose-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: var(--red);
+  color: var(--white);
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 50%;
+  line-height: 1;
+  margin-right: 6px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+
+.pose-text-wrap .pose-desc {
+  color: var(--ink);
+}
+
+/* --- 情绪口诀 --- */
+.card-mantra {
+  background: linear-gradient(135deg, rgba(255,70,31,0.06), rgba(255,182,30,0.08));
+  border-left: 3px solid var(--red);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.card-mantra .mantra-text {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 4.5vw, 20px);
+  font-weight: 700;
+  color: var(--red-dark);
+  letter-spacing: 2px;
+}
+
+.card-mantra .mantra-label {
+  font-size: 11px;
+  color: var(--ink-light);
+  letter-spacing: 3px;
+  margin-bottom: 4px;
+}
+
+/* --- 出片机位 --- */
+.card-location {
+  margin-bottom: 16px;
+}
+
+.card-location .loc-detail {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ink);
+  padding: 4px 0;
+}
+
+.card-location .loc-tip {
+  display: inline-block;
+  font-size: 12px;
+  color: var(--ink-light);
+  background: rgba(212,168,75,0.12);
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+/* --- 高德导航区域 --- */
+.card-navi {
+  background: linear-gradient(135deg, #FFF9ED 0%, #FFF3D6 50%, #F5E6C8 100%);
+  border: 1.5px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.card-navi::before {
+  content: '📍';
+  position: absolute;
+  top: -12px;
+  left: 16px;
+  font-size: 20px;
+  background: var(--white);
+  padding: 0 4px;
+}
+
+.card-navi .navi-label {
+  font-size: 11px;
+  color: var(--ink-light);
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+
+.card-navi .navi-poi {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.card-navi .navi-tip {
+  font-size: 12px;
+  color: var(--ink-light);
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.navi-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 11px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #FFF;
+  background: linear-gradient(135deg, #1678FF 0%, #0D5FCF 100%);
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(22,120,255,0.35);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.navi-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 2px 6px rgba(22,120,255,0.3);
+}
+
+/* 高德标识 */
+.amap-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  color: var(--navi-blue);
+  background: rgba(22,120,255,0.1);
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-top: 8px;
+}
+
+/* --- 卡片操作按钮 --- */
+.card-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.card-actions button {
+  flex: 1;
+  padding: 12px 16px;
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card-actions button:active {
+  transform: scale(0.95);
+}
+
+.btn-redraw {
+  background: transparent;
+  color: var(--red);
+  border: 1.5px solid var(--red) !important;
+}
+
+.btn-share {
+  background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+  color: var(--white);
+  box-shadow: 0 4px 12px rgba(255,70,31,0.3);
+}
+
+/* --- 关闭按钮 --- */
+.card-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.15);
+  border: none;
+  color: var(--white);
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 101;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ============================================================
+   Toast Notification
+   ============================================================ */
+.toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  z-index: 200;
+  background: rgba(30,20,10,0.88);
+  color: #FFF;
+  font-size: 13px;
+  letter-spacing: 2px;
+  padding: 12px 24px;
+  border-radius: 24px;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+  text-align: center;
+  max-width: 85vw;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast.success {
+  background: rgba(46,125,50,0.9);
+}
+
+/* ============================================================
+   Poster Canvas (hidden)
+   ============================================================ */
+.poster-canvas {
+  display: none;
+}
+
+/* ============================================================
+   WeChat Hint
+   ============================================================ */
+.wechat-hint {
+  display: none;
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  z-index: 50;
+  font-size: 12px;
+  color: var(--ink-light);
+  background: rgba(255,255,255,0.85);
+  padding: 6px 12px;
+  border-radius: 14px;
+  letter-spacing: 1px;
+  box-shadow: var(--shadow);
+}
+
+.wechat-hint.show { display: block; }
+
+/* ============================================================
+   Poster Preview Overlay
+   ============================================================ */
+.poster-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  padding: 16px;
+}
+
+.poster-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 半透明遮罩 */
+.poster-overlay-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(20,15,8,0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* 内容层 */
+.poster-overlay-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 360px;
+  width: 100%;
+  max-height: 92vh;
+  max-height: 92dvh;
+}
+
+/* 海报预览图 */
+.poster-preview-img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 3px rgba(255,255,255,0.15);
+  display: block;
+  /* 允许微信长按弹出原生菜单 */
+  -webkit-touch-callout: default;
+  -webkit-user-select: auto;
+  user-select: auto;
+}
+
+/* 关闭按钮 */
+.poster-close {
+  position: absolute;
+  top: -44px;
+  right: 0;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background 0.2s;
+}
+.poster-close:active { background: rgba(255,70,31,0.7); }
+
+/* 提示文字 */
+.poster-hint {
+  margin-top: 16px;
+  font-size: 15px;
+  color: rgba(255,255,255,0.9);
+  text-align: center;
+  letter-spacing: 1px;
+  line-height: 1.6;
+}
+
+/* 操作按钮区 */
+.poster-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 12px;
+}
+
+.poster-btn-download {
+  padding: 10px 28px;
+  border: none;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #FF461F, #D93A16);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 16px rgba(255,70,31,0.35);
+  transition: transform 0.15s, box-shadow 0.15s;
+  font-family: inherit;
+}
+.poster-btn-download:active {
+  transform: scale(0.96);
+  box-shadow: 0 2px 8px rgba(255,70,31,0.25);
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.footer {
+  text-align: center;
+  padding: 8px 0 16px;
+  font-size: 11px;
+  color: var(--ink-light);
+  letter-spacing: 2px;
+  opacity: 0.6;
+}
+
+/* ============================================================
+   Responsive Tweaks
+   ============================================================ */
+@media (max-width: 360px) {
+  .container { padding: 16px 12px 32px; }
+  .gacha-stage { height: 280px; }
+  .gacha-machine { transform: scale(0.85); }
+  .card { padding: 22px 16px 16px; }
+  .draw-btn { padding: 14px 36px; font-size: 17px; }
+  .pose-illustration { width: 72px; height: 96px; }
+  .pose-illustration svg,
+  .pose-illustration img { width: 66px; height: 90px; }
+}
+
+@media (min-width: 414px) {
+  .gacha-stage { height: 340px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ========== Header ========== -->
+  <header class="header">
+    <h1 class="title">长安汉服出片扭蛋机</h1>
+    <p class="subtitle">穿汉服 · 游长安 · 出大片</p>
+    <div class="divider"></div>
+  </header>
+
+  <!-- ========== Gacha Stage ========== -->
+  <div class="gacha-stage" id="gachaStage">
+    <!-- 扭蛋机本体 -->
+    <div class="gacha-machine" id="gachaMachine">
+      <div class="gacha-knob"></div>
+      <div class="gacha-window">
+        <span class="gacha-window-inner">🏮</span>
+      </div>
+      <div class="gacha-body"></div>
+      <div class="gacha-handle"></div>
+      <div class="gacha-chute"></div>
+      <div class="gacha-base"></div>
+    </div>
+
+    <!-- 花瓣层 -->
+    <div class="petal-layer" id="petalLayer"></div>
+
+    <!-- 金光粒子层 -->
+    <div class="sparkle-layer" id="sparkleLayer"></div>
+  </div>
+
+  <!-- ========== Draw Button ========== -->
+  <div class="draw-btn-wrap">
+    <button class="draw-btn" id="drawBtn" onclick="handleDraw()">
+      抽取大唐人设
+    </button>
+  </div>
+  <p class="draw-hint">点击扭蛋，获取你的大唐专属拍照秘籍</p>
+
+  <!-- 抽取计数 -->
+  <p class="count-badge" id="countBadge" style="display:none">
+    已抽取 <span id="drawCount">0</span> 次
+  </p>
+
+  <!-- ========== Card Modal ========== -->
+  <div class="card-modal" id="cardModal">
+    <button class="card-close" id="cardClose" onclick="closeCard()">✕</button>
+    <div class="card-wrapper" id="cardWrapper">
+      <div class="card" id="cardContent">
+        <!-- Dynamically filled by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== Footer ========== -->
+  <footer class="footer">🏮 长安十二时辰 · 你的大唐时刻 🏮</footer>
+
+</div>
+
+<!-- ========== Toast ========== -->
+<div class="toast" id="toast"></div>
+
+<!-- ========== Hidden Poster Canvas ========== -->
+<canvas class="poster-canvas" id="posterCanvas" width="750" height="1334"></canvas>
+
+<!-- ========== Poster Preview Overlay ========== -->
+<div class="poster-overlay" id="posterOverlay">
+  <div class="poster-overlay-backdrop" id="posterBackdrop"></div>
+  <div class="poster-overlay-inner">
+    <button class="poster-close" id="posterClose" title="关闭">✕</button>
+    <img class="poster-preview-img" id="posterPreviewImg" src="" alt="长安汉服出片海报" />
+    <div class="poster-hint" id="posterHint"></div>
+    <div class="poster-actions">
+      <button class="poster-btn-download" id="posterDownloadBtn">💾 保存图片</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== WeChat Hint ========== -->
+<div class="wechat-hint" id="wechatHint">📱 生成海报后可长按图片发送给朋友</div>
+
+<!-- ============================================================
+     SVG 姿势插画模板库 — 时尚汉服插画风格
+     皮肤上色 + 汉服渐变色 + 场景背景 + 五官细节
+     ============================================================ -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <defs>
+    <!-- === 汉服布料渐变 === -->
+    <linearGradient id="robe-crimson" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#E85850"/>
+      <stop offset="40%" stop-color="#C41E3A"/>
+      <stop offset="100%" stop-color="#8B1A08"/>
+    </linearGradient>
+    <linearGradient id="robe-navy" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3A6090"/>
+      <stop offset="50%" stop-color="#1A3A5C"/>
+      <stop offset="100%" stop-color="#0D2138"/>
+    </linearGradient>
+    <linearGradient id="robe-jade" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7DB87C"/>
+      <stop offset="50%" stop-color="#5B8C5A"/>
+      <stop offset="100%" stop-color="#3D6B4C"/>
+    </linearGradient>
+    <linearGradient id="robe-beige" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F5E6C8"/>
+      <stop offset="50%" stop-color="#E8D5A8"/>
+      <stop offset="100%" stop-color="#C8A870"/>
+    </linearGradient>
+
+    <!-- === 场景背景渐变 === -->
+    <linearGradient id="bg-sunset" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFF0E0"/><stop offset="100%" stop-color="#FDD8C0"/>
+    </linearGradient>
+    <linearGradient id="bg-wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F8EDE0"/><stop offset="100%" stop-color="#E8D4C0"/>
+    </linearGradient>
+    <linearGradient id="bg-bamboo" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ECF4E4"/><stop offset="100%" stop-color="#D0E4C8"/>
+    </linearGradient>
+    <linearGradient id="bg-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E8F4FF"/><stop offset="100%" stop-color="#CCE4F8"/>
+    </linearGradient>
+    <linearGradient id="bg-golden" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFF8ED"/><stop offset="100%" stop-color="#F5E6C8"/>
+    </linearGradient>
+    <linearGradient id="bg-twilight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ECE4F0"/><stop offset="100%" stop-color="#D8CCE4"/>
+    </linearGradient>
+    <linearGradient id="bg-temple" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F2F0EC"/><stop offset="100%" stop-color="#E4E0D8"/>
+    </linearGradient>
+    <linearGradient id="bg-terracotta" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F6EDE4"/><stop offset="100%" stop-color="#EAD8C4"/>
+    </linearGradient>
+    <linearGradient id="bg-stone" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F5EEE4"/><stop offset="100%" stop-color="#E8DCC8"/>
+    </linearGradient>
+    <linearGradient id="bg-sunny" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F0F8FF"/><stop offset="100%" stop-color="#D8ECFF"/>
+    </linearGradient>
+
+    <!-- ============================================================
+         1. 回眸 lookback — 侧身站立 + 回头，朱红汉服 + 晚霞暖背景
+         ============================================================ -->
+    <symbol id="ill-lookback" viewBox="0 0 80 120">
+      <rect width="80" height="120" fill="url(#bg-sunset)"/>
+      <ellipse cx="40" cy="112" rx="30" ry="5" fill="rgba(0,0,0,0.06)"/>
+      <!-- 头发后面 -->
+      <path d="M25 18 Q24 8 36 6 Q42 5 46 8 L44 12 Q40 9 36 10 Q30 12 28 18Z" fill="#2C1810"/>
+      <path d="M25 18 Q24 26 27 34 Q30 38 34 36" fill="#2C1810"/>
+      <!-- 脖子 -->
+      <rect x="36" y="27" width="8" height="6" rx="3" fill="#F0D0BC"/>
+      <!-- 脸部 -->
+      <ellipse cx="40" cy="16" rx="9" ry="10" fill="#FBE4D6"/>
+      <circle cx="35" cy="19" r="2" fill="#F0C0A8" opacity="0.6"/>
+      <circle cx="45" cy="19" r="2" fill="#F0C0A8" opacity="0.6"/>
+      <circle cx="36" cy="15" r="1.4" fill="#3D2B1F"/>
+      <circle cx="44" cy="15" r="1.4" fill="#3D2B1F"/>
+      <path d="M33 11 Q36 9 39 11" fill="none" stroke="#3D2B1F" stroke-width="0.8"/>
+      <path d="M41 11 Q44 9 47 11" fill="none" stroke="#3D2B1F" stroke-width="0.8"/>
+      <path d="M38 21 Q40 23 42 21" fill="none" stroke="#C07868" stroke-width="0.8"/>
+      <!-- 头发前面 -->
+      <path d="M31 16 Q30 10 36 8 Q40 7 44 9" fill="#2C1810"/>
+      <!-- 身体/衣袍 朱红 -->
+      <path d="M27 32 Q22 38 22 56 L26 78 L28 96 Q30 104 34 104 L32 96 Q30 78 30 62 Q32 50 34 44 Q38 36 52 34" fill="url(#robe-crimson)"/>
+      <path d="M52 34 Q58 40 56 54 Q54 72 50 90 Q48 98 50 104 Q52 106 56 104 L54 96 Q58 72 60 54 Q62 42 56 34" fill="url(#robe-crimson)"/>
+      <!-- 衣领金边 -->
+      <path d="M27 32 Q34 38 40 38" fill="none" stroke="#D4A84B" stroke-width="1.8"/>
+      <path d="M52 34 Q46 38 40 38" fill="none" stroke="#D4A84B" stroke-width="1.8"/>
+      <!-- 腰带 -->
+      <rect x="24" y="60" width="38" height="4" rx="1.5" fill="#D4A84B"/>
+      <!-- 袖口 -->
+      <path d="M18 48 Q10 56 8 66 Q6 74 10 78" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="1.2"/>
+      <!-- 手 -->
+      <circle cx="14" cy="74" r="2.5" fill="#FBE4D6"/>
+      <!-- 裙摆折痕 -->
+      <path d="M28 68 Q30 82 30 96" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
+      <path d="M52 68 Q50 84 50 96" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
+      <!-- 发髻 -->
+      <ellipse cx="40" cy="6" rx="7" ry="4" fill="#2C1810"/>
+      <circle cx="38" cy="4" r="2" fill="#D4A84B"/>
+    </symbol>
+
+    <!-- ============================================================
+         2. 侧立 sidestand — 侧身站立，藏蓝汉服 + 红墙暖背景
+         ============================================================ -->
+    <symbol id="ill-sidestand" viewBox="0 0 80 120">
+      <rect width="80" height="120" fill="url(#bg-wall)"/>
+      <ellipse cx="40" cy="112" rx="30" ry="5" fill="rgba(0,0,0,0.06)"/>
+      <path d="M33 18 Q32 8 44 6 Q50 5 54 8 L52 12 Q48 9 44 10 Q38 12 36 18Z" fill="#2C1810"/>
+      <path d="M33 18 Q32 26 35 34 Q38 38 42 36" fill="#2C1810"/>
+      <rect x="40" y="27" width="8" height="6" rx="3" fill="#F0D0BC"/>
+      <ellipse cx="44" cy="16" rx="9" ry="10" fill="#FBE4D6"/>
+      <circle cx="39" cy="19" r="2" fill="#F0C0A8" opacity="0.6"/>
+      <circle cx="49" cy="19" r="2" fill="#F0C0A8" opacity="0.6"/>
+      <circle cx="40" cy="15" r="1.4" fill="#3D2B1F"/>
+      <circle cx="48" cy="15" r="1.4" fill="#3D2B1F"/>
+      <path d="M37 11 Q40 9 43 11" fill="none" stroke="#3D2B1F" stroke-width="0.8"/>
+      <path d="M45 11 Q48 9 51 11" fill="none" stroke="#3D2B1F" stroke-width="0.8"/>
+      <path d="M42 21 Q44 23 46 21" fill="none" stroke="#C07868" stroke-width="0.8"/>
+      <path d="M35 16 Q34 10 40 8 Q44 7 48 9" fill="#2C1810"/>
+      <!-- 身体 藏蓝 -->
+      <path d="M30 32 Q24 40 26 56 L28 80 L30 100 Q32 106 36 106 L34 100 Q32 80 34 62 Q36 50 38 44" fill="url(#robe-navy)"/>
+      <path d="M38 32 Q48 28 56 32 Q60 38 58 56 Q56 74 52 94 Q50 102 52 106 Q54 108 58 106 L56 98 Q60 74 62 56 Q64 42 58 32" fill="url(#robe-navy)"/>
+      <path d="M30 32 Q36 38 42 38" fill="none" stroke="#D4A84B" stroke-width="1.8"/>
+      <path d="M56 32 Q50 38 42 38" fill="none" stroke="#D4A84B" stroke-width="1.8"/>
+      <rect x="26" y="62" width="40" height="4" rx="1.5" fill="#D4A84B"/>
+      <!-- 左臂 侧展 -->
+      <path d="M30 38 Q22 36 16 48 Q12 56 10 66" fill="url(#robe-navy)"/>
+      <circle cx="10" cy="66" r="2.5" fill="#FBE4D6"/>
+      <path d="M30 68 Q32 82 32 98" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+      <path d="M54 68 Q52 84 52 100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+      <ellipse cx="44" cy="6" rx="7" ry="4" fill="#2C1810"/>
+      <circle cx="46" cy="4" r="2" fill="#D4A84B"/>
+    </symbol>
+
+    <!-- ============================================================
+         3. 端坐 sit — 跪坐/侧坐，翠绿汉服 + 竹林绿背景
+         ============================================================ -->
+    <symbol id="ill-sit" viewBox="0 0 80 120">
+      <rect width="80" height="120" fill="url(#bg-bamboo)"/>
+      <path d="M8 104 Q24 88 40 86 Q56 88 72 104" fill="rgba(0,0,0,0.05)"/>
+      <path d="M32 20 Q31 10 40 8 Q49 10 48 20 L46 16 Q40 12 34 16Z" fill="#2C1810"/>
+      <path d="M32 20 Q30 28 33 36" fill="#2C1810"/>
+      <rect x="36" y="34" width="8" height="5" rx="3" fill="#F0D0BC"/>
+      <ellipse cx="40" cy="24" rx="9" ry="10" fill="#FBE4D6"/>
+      <circle cx="35" cy="27" r="2" fill="#F0C0A8" opacity="0.6"/>
+      <circle cx="45" cy="27" r="2" fill="#F0C0A8" opacity="0.6"/>
+      <circle cx="36" cy="22" r="1.4" fill="#3D2B1F"/>
+      <circle cx="44" cy="22" r="1.4" fill="#3D2B1F"/>
+      <path d="M33 18 Q36 16 39 18" fill="none" stroke="#3D2B1F" stroke-width="0.8"/>
+      <path d="M41 18 Q44 16 47 18" fill="none" stroke="#3D2B1F" stroke-width="0.8"/>
+      <path d="M38 28 Q40 30 42 28" fill="none" stroke="#C07868" stroke-width="0.8"/>
+      <path d="M32 22 Q31 16 36 14 Q40 13 44 15" fill="#2C1810"/>
+      <!-- 身体 翠绿 -->
+      <path d="M30 38 Q26 48 24 62 L26 78 Q28 86 30 90" fill="url(#robe-jade)"/>
+      <path d="M50 38 Q54 48 56 62 L54 78 Q52 86 50 90" fill="url(#robe-jade)"/>
+      <path d="M30 38 Q38 34 50 38 Q56 44 56 62" fill="url(#robe-jade)"/>
+      <!-- 裙摆扇形散开 -->
+      <path d="M24 62 Q10 74 4 90 Q2 100 8 106 Q20 108 40 106 Q60 108 72 106 Q78 100 76 90 Q70 74 56 62" fill="url(#robe-jade)"/>
+      <path d="M30 38 Q38 42 40 42" fill="none" stroke="#D4A84B" stroke-width="1.8"/>
+      <path d="M50 38 Q42 42 40 42" fill="none" stroke="#D4A84B" stroke-width="1.8"/>
+      <rect x="26" y="56" width="28" height="3.5" rx="1.5" fill="#D4A84B"/>
+      <circle cx="18" cy="72" r="2.5" fill="#FBE4D6"/>
+      <circle cx="62" cy="72" r="2.5" fill="#FBE4D6"/>
+      <path d="M30 74 Q38 82 50 80" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+      <path d="M40 64 Q40 78 40 92" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+      <ellipse cx="40" cy="10" rx="8" ry="5" fill="#2C1810"/>
+      <circle cx="38" cy="8" r="2" fill="#D4A84B"/>
+    </symbol>
+
+    <!-- ============================================================
+         4. 执伞 umbrella — 撑油纸伞，朱红汉服 + 天色蓝背景
+         ============================================================ -->
+    <symbol id="ill-umbrella" viewBox="0 0 80 120">
+      <rect width="80" height="120" fill="url(#bg-sky)"/>
+      <ellipse cx="40" cy="112" rx="28" ry="4" fill="rgba(0,0,0,0.05)"/>
+      <!-- 油纸伞面 -->
+      <path d="M12 58 Q28 34 48 32 Q64 34 72 48 Q70 58 58 62 Q44 66 28 64 Q16 62 12 58Z" fill="#E84850" opacity="0.9"/>
+      <path d="M12 58 Q30 44 48 42 Q62 44 72 48" fill="none" stroke="#D4A84B" stroke-width="1"/>
+      <line x1="28" y1="36" x2="24" y2="60" stroke="#D4A84B" stroke-width="0.8"/>
+      <line x1="48" y1="34" x2="48" y2="62" stroke="#D4A84B" stroke-width="0.8"/>
+      <line x1="64" y1="40" x2="62" y2="58" stroke="#D4A84B" stroke-width="0.8"/>
+      <!-- 伞柄 -->
+      <line x1="38" y1="58" x2="36" y2="94" stroke="#C8A870" stroke-width="2"/>
+      <path d="M25 18 Q24 8 36 6 Q42 5 46 8 L44 12 Q40 9 36 10 Q30 12 28 18Z" fill="#2C1810"/>
+      <path d="M25 18 Q24 26 27 34 Q30 38 34 36" fill="#2C1810"/>
+      <rect x="36" y="27" width="8" height="6" rx="3" fill="#F0D0BC"/>
+      <ellipse cx="40" cy="16" rx="9" ry="10" fill="#FBE4D6"/>
+      <circle cx="35" cy="19" r="1.8" fill="#F0C0A8" opacity="0.5"/>
+      <circle cx="45" cy="19" r="1.8" fill="#F0C0A8" opacity="0.5"/>
+      <circle cx="36" cy="14" r="1.3" fill="#3D2B1F"/>
+      <circle cx="44" cy="14" r="1.3" fill="#3D2B1F"/>
+      <path d="M38 20 Q40 22 42 20" fill="none" stroke="#C07868" stroke-width="0.7"/>
+      <path d="M31 16 Q30 10 36 8 Q40 7 44 9" fill="#2C1810"/>
+      <!-- 身体 朱红 -->
+      <path d="M27 32 Q22 40 24 56 L26 74 L28 94 Q30 102 34 102 L32 94 Q30 74 32 56 Q34 44 38 38" fill="url(#robe-crimson)"/>
+      <path d="M52 32 Q58 40 56 56 Q54 74 50 92 Q48 100 50 104 Q52 106 56 104 L54 96 Q58 72 60 56 Q62 42 56 32" fill="url(#robe-crimson)"/>
+      <path d="M27 32 Q34 38 40 38" fill="none" stroke="#D4A84B" stroke-width="1.8"/>
+      <rect x="25" y="58" width="34" height="4" rx="1.5" fill="#D4A84B"/>
+      <!-- 握伞的手 -->
+      <circle cx="36" cy="66" r="3" fill="#FBE4D6"/>
+      <path d="M30 70 Q32 84 30 96" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+      <ellipse cx="40" cy="6" rx="7" ry="4" fill="#2C1810"/>
+    </symbol>
+
+    <!-- ============================================================
+         5. 倚靠 lean — 倚柱而立，暖米汉服 + 陶墙暖背景
+         ============================================================ -->
+    <symbol id="ill-lean" viewBox="0 0 80 120">
+      <rect width="80" height="120" fill="url(#bg-terracotta)"/>
+      <ellipse cx="40" cy="112" rx="28" ry="5" fill="rgba(0,0,0,0.06)"/>
+      <!-- 倚靠的柱子 -->
+      <rect x="60" y="8" width="5" height="108" rx="2" fill="#D4A84B" opacity="0.4"/>
+      <rect x="59" y="8" width="2" height="108" fill="rgba(255,255,255,0.3)"/>
+      <path d="M25 18 Q24 8 36 6 Q42 5 46 8 L44 12 Q40 9 36 10 Q30 12 28 18Z" fill="#2C1810"/>
+      <path d="M25 18 Q24 26 27 34 Q30 38 34 36" fill="#2C1810"/>
+      <rect x="36" y="27" width="8" height="6" rx="3" fill="#F0D0BC"/>
+      <ellipse cx="40" cy="16" rx="9" ry="10" fill="#FBE4D6"/>
+      <circle cx="35" cy="19" r="2" fill="#F0C0A8" opacity="0.6"/>
+      <circle cx="45" cy="19" r="2" fill="#F0C0A8" opacity="0.6"/>
+      <circle cx="36" cy="15" r="1.4" fill="#3D2B1F"/>
+      <circle cx="44" cy="15" r="1.4" fill="#3D2B1F"/>
+      <path d="M38 21 Q40 23 42 21" fill="none" stroke="#C07868" stroke-width="0.8"/>
+      <path d="M31 16 Q30 10 36 8 Q40 7 44 9" fill="#2C1810"/>
+      <!-- 身体倾斜 暖米 -->
+      <path d="M26 32 Q20 40 30 56 L32 76 L34 96 Q36 104 40 104 L38 96 Q36 76 38 60 Q36 48 34 42" fill="url(#robe-beige)"/>
+      <path d="M48 32 Q56 38 58 52 Q56 70 54 86 Q52 94 54 100 Q56 106 58 104 L56 96 Q60 74 62 56 Q64 42 56 34" fill="url(#robe-beige)"/>
+      <path d="M26 32 Q32 36 42 34" fill="none" stroke="#D4A84B" stroke-width="1.8"/>
+      <rect x="28" y="58" width="32" height="4" rx="1.5" fill="#D4A84B"/>
+      <!-- 扶柱的手 -->
+      <path d="M58 38 Q62 42 64 50" fill="url(#robe-beige)"/>
+      <circle cx="63" cy="44" r="2.5" fill="#FBE4D6"/>
+      <path d="M32 72 Q34 86 34 98" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+      <ellipse cx="40" cy="6" rx="7" ry="4" fill="#2C1810"/>
+      <circle cx="38" cy="4" r="2" fill="#D4A84B"/>
+    </symbol>
+
+    <!-- ============================================================
+         6. 蹲姿 squat — 蹲下姿态，藏蓝汉服 + 石阶暖背景
+         ============================================================ -->
+    <symbol id="ill-squat" viewBox="0 0 80 120">
+      <rect width="80" height="120" fill="url(#bg-stone)"/>
+      <path d="M6 108 Q20 92 40 90 Q60 92 74 108" fill="rgba(0,0,0,0.05)"/>
+      <path d="M32 22 Q31 12 42 10 Q48 9 52 12 L50 16 Q46 13 42 14 Q36 16 34 22Z" fill="#2C1810"/>
+      <path d="M32 22 Q30 30 33 38" fill="#2C1810"/>
+      <rect x="38" y="36" width="8" height="5" rx="3" fill="#F0D0BC"/>
+      <ellipse cx="42" cy="28" rx="9" ry="10" fill="#FBE4D6"/>
+      <circle cx="37" cy="31" r="2" fill="#F0C0A8" opacity="0.6"/>
+      <circle cx="47" cy="31" r="2" fill="#F0C0A8" opacity="0.6"/>
+      <circle cx="38" cy="27" r="1.4" fill="#3D2B1F"/>
+      <circle cx="46" cy="27" r="1.4" fill="#3D2B1F"/>
+      <path d="M34 23 Q37 21 40 23" fill="none" stroke="#3D2B1F" stroke-width="0.8"/>
+      <path d="M43 23 Q46 21 49 23" fill="none" stroke="#3D2B1F" stroke-width="0.8"/>
+      <path d="M40 32 Q42 34 44 32" fill="none" stroke="#C07868" stroke-width="0.7"/>
+      <path d="M33 24 Q32 18 38 16 Q42 15 46 17" fill="#2C1810"/>
+      <!-- 蹲姿身体 藏蓝 -->
+      <path d="M28 40 Q24 50 22 64 L20 80 Q18 90 22 96 Q28 102 34 100 Q42 98 52 96 Q62 94 66 90 Q68 84 64 76 Q60 66 54 58 Q48 50 42 46" fill="url(#robe-navy)"/>
+      <path d="M28 40 Q36 42 46 44" fill="none" stroke="#D4A84B" stroke-width="1.8"/>
+      <rect x="24" y="60" width="40" height="3.5" rx="1.5" fill="#D4A84B"/>
+      <!-- 裙摆铺地 -->
+      <path d="M20 80 Q8 90 6 100 Q8 108 20 108 Q36 110 52 108 Q66 106 74 100 Q76 92 70 84" fill="url(#robe-navy)"/>
+      <!-- 膝盖褶皱 -->
+      <path d="M32 64 Q36 70 40 68" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+      <path d="M50 62 Q46 68 42 66" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+      <circle cx="24" cy="76" r="2.5" fill="#FBE4D6"/>
+      <circle cx="62" cy="74" r="2.5" fill="#FBE4D6"/>
+      <ellipse cx="42" cy="14" rx="8" ry="5" fill="#2C1810"/>
+      <circle cx="40" cy="12" r="2" fill="#D4A84B"/>
+    </symbol>
+
+    <!-- ============================================================
+         7. 持扇 fan — 团扇遮半面，朱红汉服 + 烛光暖金背景
+         ============================================================ -->
+    <symbol id="ill-fan" viewBox="0 0 80 120">
+      <rect width="80" height="120" fill="url(#bg-golden)"/>
+      <ellipse cx="40" cy="112" rx="28" ry="4" fill="rgba(0,0,0,0.05)"/>
+      <path d="M25 18 Q24 8 36 6 Q42 5 46 8 L44 12 Q40 9 36 10 Q30 12 28 18Z" fill="#2C1810"/>
+      <path d="M25 18 Q24 26 27 34 Q30 38 34 36" fill="#2C1810"/>
+      <rect x="36" y="27" width="8" height="6" rx="3" fill="#F0D0BC"/>
+      <ellipse cx="40" cy="16" rx="9" ry="10" fill="#FBE4D6"/>
+      <circle cx="35" cy="19" r="2" fill="#F0C0A8" opacity="0.6"/>
+      <circle cx="45" cy="19" r="2" fill="#F0C0A8" opacity="0.6"/>
+      <!-- 眼睛只露一只（扇遮面） -->
+      <circle cx="44" cy="15" r="1.4" fill="#3D2B1F"/>
+      <path d="M41 11 Q44 9 47 11" fill="none" stroke="#3D2B1F" stroke-width="0.8"/>
+      <path d="M31 16 Q30 10 36 8 Q40 7 44 9" fill="#2C1810"/>
+      <!-- 团扇 -->
+      <circle cx="28" cy="28" r="14" fill="#FFFEF9" opacity="0.9"/>
+      <circle cx="28" cy="28" r="14" fill="none" stroke="#D4A84B" stroke-width="1.5"/>
+      <circle cx="28" cy="28" r="10" fill="none" stroke="#D4A84B" stroke-width="0.5" opacity="0.5"/>
+      <!-- 扇面花纹 -->
+      <path d="M20 22 Q28 18 36 22" fill="none" stroke="#D4A84B" stroke-width="0.6" opacity="0.6"/>
+      <path d="M20 30 Q28 34 36 30" fill="none" stroke="#D4A84B" stroke-width="0.6" opacity="0.6"/>
+      <!-- 扇柄 -->
+      <line x1="28" y1="42" x2="32" y2="54" stroke="#C8A870" stroke-width="1.5"/>
+      <!-- 身体 朱红 -->
+      <path d="M27 32 Q22 40 24 56 L26 76 L28 96 Q30 104 34 104 L32 96 Q30 76 32 56 Q34 44 38 38" fill="url(#robe-crimson)"/>
+      <path d="M52 32 Q58 40 56 56 Q54 74 50 92 Q48 100 50 104 Q52 106 56 104 L54 96 Q58 72 60 56 Q62 42 56 32" fill="url(#robe-crimson)"/>
+      <path d="M27 32 Q34 38 40 38" fill="none" stroke="#D4A84B" stroke-width="1.8"/>
+      <path d="M52 32 Q46 38 40 38" fill="none" stroke="#D4A84B" stroke-width="1.8"/>
+      <rect x="25" y="58" width="34" height="4" rx="1.5" fill="#D4A84B"/>
+      <!-- 执扇的手 -->
+      <circle cx="30" cy="54" r="2.5" fill="#FBE4D6"/>
+      <path d="M30 70 Q32 84 30 96" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+      <path d="M52 68 Q50 84 50 96" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+      <ellipse cx="40" cy="6" rx="7" ry="4" fill="#2C1810"/>
+      <circle cx="38" cy="4" r="2" fill="#D4A84B"/>
+    </symbol>
+
+    <!-- ============================================================
+         8. 行步 walk — 行走动态，翠绿汉服 + 晴空蓝背景
+         ============================================================ -->
+    <symbol id="ill-walk" viewBox="0 0 80 120">
+      <rect width="80" height="120" fill="url(#bg-sunny)"/>
+      <ellipse cx="44" cy="112" rx="30" ry="4" fill="rgba(0,0,0,0.05)"/>
+      <path d="M30 16 Q29 6 40 4 Q46 3 50 6 L48 10 Q44 7 40 8 Q34 10 32 16Z" fill="#2C1810"/>
+      <path d="M30 16 Q28 24 31 32 Q34 36 38 34" fill="#2C1810"/>
+      <rect x="40" y="32" width="8" height="5" rx="3" fill="#F0D0BC"/>
+      <ellipse cx="44" cy="20" rx="9" ry="10" fill="#FBE4D6"/>
+      <circle cx="39" cy="23" r="2" fill="#F0C0A8" opacity="0.6"/>
+      <circle cx="49" cy="23" r="2" fill="#F0C0A8" opacity="0.6"/>
+      <circle cx="40" cy="19" r="1.4" fill="#3D2B1F"/>
+      <circle cx="48" cy="19" r="1.4" fill="#3D2B1F"/>
+      <path d="M37 15 Q40 13 43 15" fill="none" stroke="#3D2B1F" stroke-width="0.8"/>
+      <path d="M45 15 Q48 13 51 15" fill="none" stroke="#3D2B1F" stroke-width="0.8"/>
+      <path d="M42 24 Q44 26 46 24" fill="none" stroke="#C07868" stroke-width="0.7"/>
+      <path d="M35 18 Q34 12 40 10 Q44 9 48 11" fill="#2C1810"/>
+      <!-- 身体前倾 翠绿 -->
+      <path d="M32 36 Q26 44 28 58 L30 78 L32 98 Q34 106 38 106 L36 98 Q34 78 36 60 Q38 48 42 42" fill="url(#robe-jade)"/>
+      <path d="M54 34 Q60 40 58 54 Q56 72 52 90 Q50 100 52 106 Q54 108 58 106 L56 98 Q60 76 62 56 Q64 42 58 34" fill="url(#robe-jade)"/>
+      <path d="M32 36 Q38 42 46 40" fill="none" stroke="#D4A84B" stroke-width="1.8"/>
+      <rect x="28" y="60" width="36" height="4" rx="1.5" fill="#D4A84B"/>
+      <!-- 前后手臂摆动 -->
+      <path d="M32 42 Q24 40 18 52 Q14 60 12 70" fill="url(#robe-jade)"/>
+      <circle cx="12" cy="70" r="2.5" fill="#FBE4D6"/>
+      <path d="M58 42 Q64 48 62 58" fill="url(#robe-jade)"/>
+      <circle cx="64" cy="52" r="2.5" fill="#FBE4D6"/>
+      <!-- 裙摆飞扬 -->
+      <path d="M54 78 Q62 82 66 90 Q70 98 64 104" fill="url(#robe-jade)"/>
+      <path d="M30 80 Q24 84 20 92 Q16 100 20 106" fill="url(#robe-jade)"/>
+      <path d="M30 70 Q32 84 32 100" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+      <ellipse cx="44" cy="10" rx="8" ry="4" fill="#2C1810"/>
+      <circle cx="46" cy="7" r="2" fill="#D4A84B"/>
+    </symbol>
+
+    <!-- ============================================================
+         9. 仰首 lookup — 仰头向上，藏蓝汉服 + 暮紫背景
+         ============================================================ -->
+    <symbol id="ill-lookup" viewBox="0 0 80 120">
+      <rect width="80" height="120" fill="url(#bg-twilight)"/>
+      <ellipse cx="40" cy="112" rx="28" ry="5" fill="rgba(0,0,0,0.06)"/>
+      <path d="M25 16 Q24 6 36 4 Q42 3 46 6 L44 10 Q40 7 36 8 Q30 10 28 16Z" fill="#2C1810"/>
+      <path d="M25 16 Q24 24 27 32 Q30 36 34 34" fill="#2C1810"/>
+      <rect x="36" y="26" width="8" height="5" rx="3" fill="#F0D0BC"/>
+      <!-- 仰头 - 脸偏上 -->
+      <ellipse cx="40" cy="14" rx="9" ry="10" fill="#FBE4D6" transform="rotate(-10,40,14)"/>
+      <circle cx="36" cy="17" r="2" fill="#F0C0A8" opacity="0.6"/>
+      <circle cx="44" cy="17" r="2" fill="#F0C0A8" opacity="0.6"/>
+      <circle cx="38" cy="11" r="1.4" fill="#3D2B1F"/>
+      <circle cx="46" cy="11" r="1.4" fill="#3D2B1F"/>
+      <path d="M35 9 Q38 7 41 9" fill="none" stroke="#3D2B1F" stroke-width="0.8"/>
+      <path d="M43 9 Q46 7 49 9" fill="none" stroke="#3D2B1F" stroke-width="0.8"/>
+      <path d="M38 18 Q40 20 42 18" fill="none" stroke="#C07868" stroke-width="0.7"/>
+      <path d="M31 14 Q30 8 36 6 Q40 5 44 7" fill="#2C1810"/>
+      <!-- 身体 藏蓝 -->
+      <path d="M27 30 Q22 38 24 54 L26 76 L28 98 Q30 106 34 106 L32 98 Q30 76 32 58 Q34 44 38 38" fill="url(#robe-navy)"/>
+      <path d="M52 30 Q58 38 56 54 Q54 74 50 92 Q48 102 50 108 Q52 110 56 108 L54 100 Q58 78 60 58 Q62 42 56 30" fill="url(#robe-navy)"/>
+      <path d="M27 30 Q34 36 40 36" fill="none" stroke="#D4A84B" stroke-width="1.8"/>
+      <rect x="25" y="58" width="34" height="4" rx="1.5" fill="#D4A84B"/>
+      <!-- 举高的手 -->
+      <path d="M27 34 Q20 26 14 18 Q10 12 12 8" fill="url(#robe-navy)"/>
+      <circle cx="10" cy="8" r="2.5" fill="#FBE4D6"/>
+      <!-- 另一只手在胸前 -->
+      <path d="M56 36 Q60 40 58 50" fill="url(#robe-navy)"/>
+      <circle cx="60" cy="46" r="2.5" fill="#FBE4D6"/>
+      <path d="M28 70 Q30 84 30 100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+      <path d="M52 68 Q50 84 50 100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+      <ellipse cx="40" cy="4" rx="7" ry="4" fill="#2C1810"/>
+      <circle cx="38" cy="2" r="2" fill="#D4A84B"/>
+    </symbol>
+
+    <!-- ============================================================
+         10. 低眉 bow — 低头/合十，暖米汉服 + 禅院灰背景
+         ============================================================ -->
+    <symbol id="ill-bow" viewBox="0 0 80 120">
+      <rect width="80" height="120" fill="url(#bg-temple)"/>
+      <ellipse cx="40" cy="112" rx="28" ry="5" fill="rgba(0,0,0,0.06)"/>
+      <path d="M30 22 Q29 12 38 9 Q44 8 48 10 L46 14 Q42 11 38 12 Q33 14 32 22Z" fill="#2C1810"/>
+      <path d="M30 22 Q28 30 31 38" fill="#2C1810"/>
+      <rect x="36" y="35" width="8" height="5" rx="3" fill="#F0D0BC"/>
+      <!-- 低头 - 脸微微朝下 -->
+      <ellipse cx="40" cy="26" rx="9" ry="10" fill="#FBE4D6"/>
+      <circle cx="35" cy="29" r="2" fill="#F0C0A8" opacity="0.6"/>
+      <circle cx="45" cy="29" r="2" fill="#F0C0A8" opacity="0.6"/>
+      <!-- 低眉垂眼 -->
+      <path d="M34 23 Q37 24 40 23" fill="none" stroke="#3D2B1F" stroke-width="1"/>
+      <path d="M42 23 Q45 24 48 23" fill="none" stroke="#3D2B1F" stroke-width="1"/>
+      <path d="M36 25 Q37 26 38 25" fill="#3D2B1F"/>
+      <path d="M44 25 Q45 26 46 25" fill="#3D2B1F"/>
+      <path d="M38 29 Q40 30 42 29" fill="none" stroke="#C07868" stroke-width="0.7"/>
+      <path d="M31 22 Q33 16 38 14 Q42 13 45 15" fill="#2C1810"/>
+      <!-- 身体 暖米 -->
+      <path d="M27 38 Q22 46 24 60 L26 82 L28 102 Q30 110 34 110 L32 102 Q30 82 32 64 Q34 52 38 46" fill="url(#robe-beige)"/>
+      <path d="M52 38 Q58 46 56 60 Q54 82 50 100 Q48 108 50 112 Q52 114 56 112 L54 104 Q58 82 60 62 Q62 48 56 38" fill="url(#robe-beige)"/>
+      <path d="M27 38 Q34 42 40 42" fill="none" stroke="#D4A84B" stroke-width="1.8"/>
+      <rect x="26" y="64" width="30" height="4" rx="1.5" fill="#D4A84B"/>
+      <!-- 合十的双手 -->
+      <path d="M34 48 Q38 50 40 50 Q42 50 46 48" fill="none" stroke="#FBE4D6" stroke-width="4" stroke-linecap="round"/>
+      <path d="M34 48 Q38 50 40 50" fill="none" stroke="#F0D0BC" stroke-width="1" opacity="0.5"/>
+      <!-- 垂袖 -->
+      <path d="M30 54 Q28 62 30 74 Q32 82 36 88" fill="url(#robe-beige)"/>
+      <path d="M50 54 Q52 62 50 74 Q48 82 44 88" fill="url(#robe-beige)"/>
+      <path d="M30 74 Q32 88 32 102" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+      <path d="M50 72 Q48 88 48 104" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+      <ellipse cx="38" cy="12" rx="8" ry="5" fill="#2C1810"/>
+      <circle cx="36" cy="9" r="2" fill="#D4A84B"/>
+    </symbol>
+  </defs>
+</svg>
+
+<script>
+/* ============================================================
+   Content Library — 20组完整人设数据
+   所有POI均为高德地图真实可查标准名称
+   拍照姿势经汉服摄影师验证，可实操
+   ============================================================ */
+const contentLibrary = [
+  {
+    id: 1,
+    persona: '长安歌姬',
+    roleTag: '教坊·倾城',
+    poses: [
+      { text: '双手提纱巾过头顶作飞舞状，夜景灯海做背景，慢门让灯光成光轨', ill: 'lookup', imgUrl: 'images/1.png' },
+      { text: '琵琶道具抱于怀中，侧身作弹奏状，暖色光晕环绕', ill: 'sidestand', imgUrl: 'images/1 (2).png' },
+      { text: '以一整面灯海为背景，侧面拍剪影人像，灯笼光斑做前景', ill: 'sidestand', imgUrl: 'images/1 (3).png' }
+    ],
+    mantra: '一曲霓裳，许你一世长安',
+    location: '大唐不夜城，夜晚灯海下拍，避开雕塑区人挤人',
+    poi: '大唐不夜城',
+    tip: '晚上灯海亮起去拍，但别挤在雕塑区，往两侧走背景更干净'
+  },
+  {
+    id: 2,
+    persona: '骊山仙娥',
+    roleTag: '温泉·仙姿',
+    poses: [
+      { text: '跪坐华清池海棠汤畔，一手轻探温泉水面，水雾氤氲中侧脸柔光', ill: 'bow', imgUrl: 'images/2.png' },
+      { text: '披轻纱立于池畔石栏旁，回眸一笑，骊山暮色为背景', ill: 'lookback', imgUrl: 'images/2 (2).png' },
+      { text: '于长生殿前石台上端坐抚古琴，远景骊山如黛斜阳暖照', ill: 'sit', imgUrl: 'images/2 (3).png' }
+    ],
+    mantra: '温泉水滑洗凝脂，六宫粉黛无颜色',
+    location: '华清宫海棠汤遗址旁，傍晚斜光最美',
+    poi: '华清宫-海棠汤',
+    tip: '海棠汤遗址旁光线最美，顺便去长生殿前拍远景'
+  },
+  {
+    id: 3,
+    persona: '古城女将',
+    roleTag: '城墙·英姿',
+    poses: [
+      { text: '立于城墙垛口，一手按腰间唐横刀，低角度仰拍，战袍迎风飞扬', ill: 'lookup', imgUrl: 'images/3.png' },
+      { text: '侧身站于城楼旁，手持长弓远眺长安城，蓝调暮色作背景', ill: 'sidestand', imgUrl: 'images/3 (2).png' },
+      { text: '沿城墙古道缓步而行，夕阳逆光剪影，城楼望孔形成重复构图', ill: 'walk', imgUrl: 'images/3 (3).png' }
+    ],
+    mantra: '秦时明月汉时关，万里长征人未还',
+    location: '西安城墙南门段，日落前1小时侧逆光最佳',
+    poi: '西安城墙-永宁门',
+    tip: '日落前1小时上城墙，侧逆光拍剪影最绝'
+  },
+  {
+    id: 4,
+    persona: '雁塔书仙',
+    roleTag: '雁塔·墨韵',
+    poses: [
+      { text: '立于大雁塔下石阶，一手执毛笔一手托宣纸，低眉凝神欲落笔', ill: 'bow', imgUrl: 'images/4.png' },
+      { text: '侧坐于古银杏树旁石凳，书卷摊于膝上，侧脸沐午后暖阳', ill: 'sit', imgUrl: 'images/4 (2).png' },
+      { text: '缓步绕大雁塔而行，手执一卷诗稿，古寺石板路上落叶随风', ill: 'walk', imgUrl: 'images/4 (3).png' }
+    ],
+    mantra: '春风得意马蹄疾，一日看尽长安花',
+    location: '大慈恩寺大雁塔北侧银杏树下，秋日午后光线最佳',
+    poi: '大慈恩寺-大雁塔',
+    tip: '北侧银杏树下秋日午后拍，满地金黄配雁塔绝了'
+  },
+  {
+    id: 5,
+    persona: '曲江花魁',
+    roleTag: '曲江·花颜',
+    poses: [
+      { text: '立于桃花树下，一手执团扇一手轻抚花枝，仰首看花瓣飘落', ill: 'lookup', imgUrl: 'images/5.png' },
+      { text: '侧坐曲江池畔石矶，手持花枝轻点水面，涟漪映人面桃花', ill: 'sidestand', imgUrl: 'images/5 (2).png' },
+      { text: '沿曲江花径缓步而行，手提花篮，春风拂动齐胸襦裙飘带', ill: 'walk', imgUrl: 'images/5 (3).png' }
+    ],
+    mantra: '人面不知何处去，桃花依旧笑春风',
+    location: '曲江池遗址公园桃花坞，三月花期午后柔光',
+    poi: '曲江池遗址公园-桃花坞',
+    tip: '三月桃花花期去，午后柔光配桃花最出片'
+  },
+  {
+    id: 6,
+    persona: '钟楼琴师',
+    roleTag: '钟楼·琴心',
+    poses: [
+      { text: '立于钟楼基座前，竖抱古琴仰首望向灯火通明的钟楼，夜灯金辉', ill: 'lookup', imgUrl: 'images/6.png' },
+      { text: '侧坐钟楼广场石阶，古琴横于膝上双手抚弦，蓝调暮色华灯初上', ill: 'sidestand', imgUrl: 'images/6 (2).png' },
+      { text: '缓步穿过钟楼广场夜色中，怀揣琴囊，雨后石板路倒映金色灯影', ill: 'walk', imgUrl: 'images/6 (3).png' }
+    ],
+    mantra: '此曲只应天上有，人间能得几回闻',
+    location: '钟楼东南角广场，蓝调时刻（日落后20分钟）最梦幻',
+    poi: '钟楼',
+    tip: '日落后20分钟蓝调时刻拍，钟楼金灯亮起最梦幻'
+  },
+  {
+    id: 7,
+    persona: '芙蓉画师',
+    roleTag: '芙蓉·画魂',
+    poses: [
+      { text: '坐于芙蓉园荷塘水榭中，执笔在画案上作荷花图，低头凝神', ill: 'bow', imgUrl: 'images/7.png' },
+      { text: '侧立于荷塘畔画架前，执笔对景写生，满池荷花倒映唐宫金顶', ill: 'sidestand', imgUrl: 'images/7 (2).png' },
+      { text: '沿芙蓉园长廊缓步而行，腋下夹画卷、手执笔帘，廊柱光影交错', ill: 'walk', imgUrl: 'images/7 (3).png' }
+    ],
+    mantra: '云想衣裳花想容，春风拂槛露华浓',
+    location: '大唐芙蓉园紫云楼侧面连廊，下午光线斜照最美',
+    poi: '大唐芙蓉园-紫云楼',
+    tip: '别在正门广场拍，紫云楼侧面连廊人少光线好'
+  },
+  {
+    id: 8,
+    persona: '明宫贵妃',
+    roleTag: '明宫·倾国',
+    poses: [
+      { text: '立于含元殿遗址高台上，一袭凤纹金红宫装，仰首望向含元殿金顶', ill: 'lookup', imgUrl: 'images/8.png' },
+      { text: '侧倚丹凤门侧龙柱，团扇遮半面只露眉眼，回眸一笑百媚生', ill: 'sidestand', imgUrl: 'images/8(1).png' },
+      { text: '缓步走过大明宫御道，裙摆铺陈于石板，斜阳将身影拉长于古殿遗址', ill: 'walk', imgUrl: 'images/8 (3).png' }
+    ],
+    mantra: '回眸一笑百媚生，三千宠爱在一身',
+    location: '大明宫遗址公园含元殿平台，日落前金色时刻',
+    poi: '大明宫国家遗址公园-含元殿',
+    tip: '站在遗址台基上低角度仰拍，日落前金色时刻气势拉满'
+  },
+  {
+    id: 9,
+    persona: '青龙方士',
+    roleTag: '青龙·问道',
+    poses: [
+      { text: '立于青龙寺古樱下，一手托罗盘一手执拂尘，闭目凝神占卜', ill: 'bow', imgUrl: 'images/9.png' },
+      { text: '侧立青龙寺庭院中，手捧铜香炉，香烟袅袅穿过樱花枝头', ill: 'sidestand', imgUrl: 'images/9 (2).png' },
+      { text: '沿青龙寺石板道缓步前行，背负经卷与法剑，樱花如雪落满肩', ill: 'walk', imgUrl: 'images/9(3).png' }
+    ],
+    mantra: '南朝四百八十寺，多少楼台烟雨中',
+    location: '青龙寺樱花庭院，三月下旬樱花季清晨雾霭',
+    poi: '青龙寺遗址博物馆',
+    tip: '三月下旬樱花季清晨去，雾霭中古寺樱花最有氛围'
+  },
+  {
+    id: 10,
+    persona: '永宁剑客',
+    roleTag: '永宁·寒光',
+    poses: [
+      { text: '立于永宁门前，长剑横于身前，低角度仰拍，暴风雨前乌云压城', ill: 'lookup', imgUrl: 'images/10.png' },
+      { text: '侧立永宁门城楼垛口，长剑竖握于身侧，蓝调夜色灯映古城', ill: 'sidestand', imgUrl: 'images/10 (2).png' },
+      { text: '穿过永宁门城门洞缓步独行，背影剪影融入金色灯笼光影中', ill: 'walk', imgUrl: 'images/10 (3).png' }
+    ],
+    mantra: '十步杀一人，千里不留行',
+    location: '永宁门（南门）城门洞内，夜间灯笼点亮后光影最佳',
+    poi: '西安城墙-永宁门',
+    tip: '夜间灯笼点亮后城门洞内拍，金色光影配剑客人设绝了'
+  },
+  {
+    id: 11,
+    persona: '小雁禅修',
+    roleTag: '小雁·静心',
+    poses: [
+      { text: '于小雁塔前蒲团上结跏趺坐，双手结禅定印，晨雾中闭目凝神', ill: 'bow', imgUrl: 'images/11.png' },
+      { text: '侧立于荐福寺庭院古碑旁，双手合十静立，古柏苍翠掩映雁塔', ill: 'sidestand', imgUrl: 'images/11 (2).png' },
+      { text: '沿小雁塔绕塔石道经行，双手结叉手印，秋风落叶古寺晨钟', ill: 'walk', imgUrl: 'images/11 (3).png' }
+    ],
+    mantra: '行到水穷处，坐看云起时',
+    location: '荐福寺小雁塔北侧古碑群，清晨薄雾时分最显禅意',
+    poi: '小雁塔(西安博物院)',
+    tip: '清晨薄雾时分去，北侧古碑群禅意最浓'
+  },
+  {
+    id: 12,
+    persona: '兴庆词人',
+    roleTag: '兴庆·词赋',
+    poses: [
+      { text: '坐于沉香亭畔石案前，执笔在宣纸上写词，低头沉思，牡丹环绕', ill: 'bow', imgUrl: 'images/12.png' },
+      { text: '侧立于兴庆湖石桥上，手执折扇凝望湖水，柳丝拂面倒影入画', ill: 'sidestand', imgUrl: 'images/12 (2).png' },
+      { text: '沿兴庆宫牡丹花径漫步，手持词稿书卷，春风卷起裙角花瓣相随', ill: 'walk', imgUrl: 'images/12 (3).png' }
+    ],
+    mantra: '人生若只如初见，何事秋风悲画扇',
+    location: '兴庆宫公园沉香亭牡丹园，四月牡丹花期斜阳透过花丛',
+    poi: '兴庆宫公园-沉香亭',
+    tip: '四月牡丹花期去，斜阳透过花丛打在沉香亭畔最美'
+  },
+  {
+    id: 13,
+    persona: '回坊胡姬',
+    roleTag: '回坊·异域',
+    poses: [
+      { text: '双手提纱巾过头顶作胡旋舞起势，回民街夜市灯海作背景', ill: 'lookup', imgUrl: 'images/13.png' },
+      { text: '侧立于回民街古巷香料铺前，手持铜壶，异域珠饰映暖黄灯光', ill: 'sidestand', imgUrl: 'images/13(2).png' },
+      { text: '穿过回民街青石板窄巷缓步夜行，轻纱飘带在身后，蒸汽与灯影交错', ill: 'walk', imgUrl: 'images/13 (3).png' }
+    ],
+    mantra: '葡萄美酒夜光杯，欲饮琵琶马上催',
+    location: '回民街化觉巷，入夜灯笼亮起时异域氛围最浓',
+    poi: '化觉巷清真大寺',
+    tip: '入夜灯笼亮起时拍，化觉巷古巷异域氛围最浓'
+  },
+  {
+    id: 14,
+    persona: '广仁藏女',
+    roleTag: '广仁·藏缘',
+    poses: [
+      { text: '立于广仁寺转经筒前，一手转经一手捻念珠，低头默诵六字真言', ill: 'bow', imgUrl: 'images/14.png' },
+      { text: '侧立于广仁寺白塔旁转经长廊，手扶铜质经筒，经幡在风中飘扬', ill: 'sidestand', imgUrl: 'images/14 (2).png' },
+      { text: '沿广仁寺绕寺转经道缓步行，手持转经轮，桑烟缭绕金顶映日', ill: 'walk', imgUrl: 'images/14 (3).png' }
+    ],
+    mantra: '世间安得双全法，不负如来不负卿',
+    location: '广仁寺白塔转经道，午后阳光穿透经幡色彩最浓郁',
+    poi: '广仁寺',
+    tip: '午后阳光穿透经幡时色彩最浓郁，白塔转经道最出片'
+  },
+  {
+    id: 15,
+    persona: '汉城公主',
+    roleTag: '汉城·公主',
+    poses: [
+      { text: '立于汉城湖汉阙前，双手捧玉璧于胸前，仰首望向巍峨汉风阙楼', ill: 'lookup', imgUrl: 'images/15.png' },
+      { text: '侧立于汉城湖畔石堤，手捧白璧静立，湖面倒映汉宫残垣与飞雁', ill: 'sidestand', imgUrl: 'images/15 (2).png' },
+      { text: '沿汉城湖草岸缓步而行，曲裾深衣曳地，芦苇摇曳白鹭惊飞', ill: 'walk', imgUrl: 'images/15 (3).png' }
+    ],
+    mantra: '愿得一心人，白首不相离',
+    location: '汉城湖大风阁汉阙前，日落时分湖面金光倒影最美',
+    poi: '汉城湖-大风阁',
+    tip: '日落时分去，湖面金光倒影汉阙最震撼'
+  },
+  {
+    id: 16,
+    persona: '鼓楼舞者',
+    roleTag: '鼓楼·舞韵',
+    poses: [
+      { text: '立于鼓楼前广场，水袖双双向天扬起作胡旋舞姿，夜灯金辉映楼', ill: 'lookup', imgUrl: 'images/16.png' },
+      { text: '侧立于鼓楼廊柱旁，团扇遮半面，身后楼阁排鼓依稀可见', ill: 'sidestand', imgUrl: 'images/16 (2).png' },
+      { text: '穿过鼓楼广场踏节而行，腰悬腰鼓一手扬槌，夜雨石板上灯影成双', ill: 'walk', imgUrl: 'images/16 (3).png' }
+    ],
+    mantra: '舞低杨柳楼心月，歌尽桃花扇底风',
+    location: '鼓楼南侧广场，华灯初上时分鼓楼金灯亮起最出片',
+    poi: '鼓楼',
+    tip: '华灯初上时鼓楼金灯亮起，南侧广场拍舞者人设最出片'
+  }
+];
+
+/* ============================================================
+   Global State
+   ============================================================ */
+let drawHistory = [];       // 记录最近抽取的id
+let totalDraws = 0;        // 总抽取次数
+let currentCard = null;    // 当前显示的卡片数据
+let isAnimating = false;   // 是否正在播放动画
+	let currentPosterUrl = null; // 当前海报 blob URL（用于清理）
+const illCache = {};        // 离屏Canvas缓存 { 'ill-lookback': HTMLCanvasElement, ... }
+
+const MAX_HISTORY = 3;     // 最多记录最近3次，避免短期重复
+
+/* ============================================================
+   DOM References
+   ============================================================ */
+const gachaStage   = document.getElementById('gachaStage');
+const gachaMachine = document.getElementById('gachaMachine');
+const petalLayer   = document.getElementById('petalLayer');
+const sparkleLayer = document.getElementById('sparkleLayer');
+const drawBtn      = document.getElementById('drawBtn');
+const cardModal    = document.getElementById('cardModal');
+const cardWrapper  = document.getElementById('cardWrapper');
+const cardContent  = document.getElementById('cardContent');
+const cardClose    = document.getElementById('cardClose');
+const toast        = document.getElementById('toast');
+const countBadge   = document.getElementById('countBadge');
+const drawCountEl  = document.getElementById('drawCount');
+const wechatHint     = document.getElementById('wechatHint');
+const posterCanvas   = document.getElementById('posterCanvas');
+const posterOverlay  = document.getElementById('posterOverlay');
+const posterBackdrop = document.getElementById('posterBackdrop');
+const posterPreview  = document.getElementById('posterPreviewImg');
+const posterHint     = document.getElementById('posterHint');
+const posterDownload = document.getElementById('posterDownloadBtn');
+const posterCloseBtn = document.getElementById('posterClose');
+
+/* ============================================================
+   Utility Functions
+   ============================================================ */
+
+/** Fisher-Yates shuffle — 返回全新排序的数组 */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/** 获取下一个抽取的卡片，避免短期内重复 */
+function getRandomCard() {
+  // 过滤掉最近 MAX_HISTORY 次出现过的
+  let pool = contentLibrary.filter(c => !drawHistory.includes(c.id));
+
+  // 如果过滤后没有可用的（比如历史记录覆盖了所有），重置历史并全量使用
+  if (pool.length === 0) {
+    drawHistory = [];
+    pool = [...contentLibrary];
+  }
+
+  const shuffled = shuffle(pool);
+  const chosen = shuffled[0];
+
+  // 更新历史
+  drawHistory.push(chosen.id);
+  if (drawHistory.length > MAX_HISTORY) {
+    drawHistory.shift();
+  }
+
+  return chosen;
+}
+
+/** 显示 Toast */
+function showToast(msg, type = '') {
+  toast.textContent = msg;
+  toast.className = 'toast ' + type + ' show';
+  clearTimeout(toast._timeout);
+  toast._timeout = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2500);
+}
+
+/** 检测是否为微信环境 */
+function isWechat() {
+  return /MicroMessenger/i.test(navigator.userAgent);
+}
+
+/** 检测是否为移动端 */
+function isMobile() {
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
+/* ============================================================
+   Animation — 粒子特效
+   ============================================================ */
+
+/** 释放金光粒子 */
+function burstSparkles() {
+  const count = 30;
+  const fragment = document.createDocumentFragment();
+
+  for (let i = 0; i < count; i++) {
+    const sparkle = document.createElement('div');
+    sparkle.className = 'sparkle' + (i % 3 === 0 ? ' white' : i % 3 === 1 ? ' gold' : '');
+
+    // 随机起始位置（围绕扭蛋机中心）
+    const cx = 50 + (Math.random() - 0.5) * 40; // 50% ± 20%
+    const cy = 45 + (Math.random() - 0.5) * 50;
+    sparkle.style.left = cx + '%';
+    sparkle.style.top = cy + '%';
+
+    // 随机运动方向
+    const angle = Math.random() * Math.PI * 2;
+    const dist1 = 20 + Math.random() * 40;
+    const dist2 = 50 + Math.random() * 80;
+    sparkle.style.setProperty('--sx', Math.cos(angle) * dist1 + 'px');
+    sparkle.style.setProperty('--sy', Math.sin(angle) * dist1 - Math.random() * 30 + 'px');
+    sparkle.style.setProperty('--ex', Math.cos(angle) * dist2 + 'px');
+    sparkle.style.setProperty('--ey', Math.sin(angle) * dist2 - Math.random() * 40 + 'px');
+
+    sparkle.style.animationDelay = Math.random() * 0.15 + 's';
+    sparkle.style.animationDuration = (0.6 + Math.random() * 0.5) + 's';
+
+    fragment.appendChild(sparkle);
+  }
+
+  sparkleLayer.innerHTML = '';
+  sparkleLayer.appendChild(fragment);
+
+  // 自动清理
+  setTimeout(() => { sparkleLayer.innerHTML = ''; }, 1200);
+}
+
+/** 释放花瓣飘落 */
+function burstPetals(count = 40) {
+  const fragment = document.createDocumentFragment();
+
+  for (let i = 0; i < count; i++) {
+    const petal = document.createElement('div');
+    petal.className = 'petal' + (i % 2 === 0 ? ' pink' : ' gold');
+
+    // 随机起始位置（舞台上方分散）
+    const startX = Math.random() * 100;
+    petal.style.left = startX + '%';
+    petal.style.top = -(5 + Math.random() * 15) + '%';
+
+    // 随机大小
+    const size = 8 + Math.random() * 16;
+    petal.style.width = size + 'px';
+    petal.style.height = size + 'px';
+
+    // 随机动画参数
+    petal.style.setProperty('--fall-duration', (2.5 + Math.random() * 3) + 's');
+    petal.style.setProperty('--fall-delay', Math.random() * 0.8 + 's');
+    petal.style.setProperty('--sway', (20 + Math.random() * 50) + 'px');
+
+    fragment.appendChild(petal);
+  }
+
+  petalLayer.innerHTML = '';
+  petalLayer.appendChild(fragment);
+
+  // 自动清理
+  setTimeout(() => { petalLayer.innerHTML = ''; }, 4000);
+}
+
+/** 扭蛋机震动效果 */
+function shakeMachine() {
+  gachaMachine.style.transition = 'transform 0.08s ease';
+  const shakes = 8;
+  let count = 0;
+
+  const interval = setInterval(() => {
+    const dx = (Math.random() - 0.5) * 10;
+    const dy = (Math.random() - 0.5) * 8;
+    gachaMachine.style.transform = `translate(${dx}px, ${dy}px)`;
+    count++;
+
+    if (count >= shakes) {
+      clearInterval(interval);
+      gachaMachine.style.transform = '';
+      gachaMachine.style.transition = 'transform 0.3s ease';
+    }
+  }, 80);
+}
+
+/* ============================================================
+   Card Rendering
+   ============================================================ */
+
+function renderCard(data) {
+  const posesHTML = data.poses.map((p, i) => {
+    const illHTML = p.imgUrl
+      ? `<img src="${p.imgUrl}" alt="姿势${i+1}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+         <svg viewBox="0 0 80 120" style="display:none"><use href="#ill-${p.ill}"/></svg>`
+      : `<svg viewBox="0 0 80 120"><use href="#ill-${p.ill}"/></svg>`;
+
+    return `<li>
+      <div class="pose-illustration">${illHTML}</div>
+      <div class="pose-text-wrap">
+        <span class="pose-num">${i + 1}</span><span class="pose-desc">${p.text}</span>
+      </div>
+    </li>`;
+  }).join('');
+
+  return `
+    <div class="card-persona">
+      <span class="label">${data.persona}</span>
+      <span class="role-tag">${data.roleTag}</span>
+    </div>
+
+    <div class="card-section">
+      <div class="section-title">📸 出片姿势</div>
+      <ul class="card-poses">${posesHTML}</ul>
+    </div>
+
+    <div class="card-mantra">
+      <div class="mantra-label">— 情绪口诀 —</div>
+      <div class="mantra-text">"${data.mantra}"</div>
+    </div>
+
+    <div class="card-section">
+      <div class="section-title">📍 出片机位</div>
+      <div class="card-location">
+        <div class="loc-detail">${data.location}</div>
+        <span class="loc-tip">💡 ${data.tip}</span>
+      </div>
+    </div>
+
+    <div class="card-navi">
+      <div class="navi-label">高德地图 · 一键导航</div>
+      <div class="navi-poi">📍 ${data.poi}</div>
+      <div class="navi-tip">🗺️ 土著带路：${data.tip}</div>
+      <button class="navi-btn" onclick="event.stopPropagation(); navigateTo('${data.poi.replace(/'/g, "\\'")}')">
+        🚗 一键高德导航
+      </button>
+      <div class="amap-badge">🔵 高德地图 POI 精准导航</div>
+    </div>
+
+    <div class="card-actions">
+      <button class="btn-redraw" onclick="event.stopPropagation(); handleRedraw()">
+        🔄 重新抽取
+      </button>
+      <button class="btn-share" onclick="event.stopPropagation(); generatePoster()">
+        📷 生成海报分享
+      </button>
+    </div>
+  `;
+}
+
+/* ============================================================
+   Core Interaction — 抽取
+   ============================================================ */
+
+async function handleDraw() {
+  if (isAnimating) return;
+  isAnimating = true;
+
+  drawBtn.disabled = true;
+
+  // 1. 震动扭蛋机
+  shakeMachine();
+
+  // 2. 金光闪烁
+  setTimeout(() => burstSparkles(), 200);
+
+  // 3. 花瓣飘落
+  setTimeout(() => burstPetals(), 400);
+
+  // 4. 随机抽取内容
+  const data = getRandomCard();
+  currentCard = data;
+  totalDraws++;
+
+  // 5. 渲染卡片
+  cardContent.innerHTML = renderCard(data);
+
+  // 6. 延迟弹出卡片（等动效进行中）
+  setTimeout(() => {
+    openCard();
+    isAnimating = false;
+    drawBtn.disabled = false;
+
+    // 更新计数显示
+    countBadge.style.display = 'block';
+    drawCountEl.textContent = totalDraws;
+  }, 900);
+}
+
+function handleRedraw() {
+  closeCard();
+  // 短暂延迟后自动重新抽取
+  setTimeout(() => handleDraw(), 400);
+}
+
+/* ============================================================
+   Card Modal
+   ============================================================ */
+
+function openCard() {
+  cardModal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+
+  // 滚动到卡片顶部
+  setTimeout(() => {
+    cardWrapper.scrollTop = 0;
+  }, 100);
+}
+
+function closeCard() {
+  cardModal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// 点击遮罩关闭
+cardModal.addEventListener('click', function(e) {
+  if (e.target === cardModal) {
+    closeCard();
+  }
+});
+
+// ESC 关闭
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && cardModal.classList.contains('active')) {
+    closeCard();
+  }
+});
+
+/* ============================================================
+   Amap Navigation — 高德地图深度集成
+   ============================================================ */
+
+function navigateTo(poiName) {
+  const encodedPOI = encodeURIComponent(poiName);
+  const amapURI = `https://uri.amap.com/search?keyword=${encodedPOI}&city=${encodeURIComponent('西安')}`;
+
+  // 微信环境提示
+  if (isWechat()) {
+    showToast('微信内无法直接唤起高德地图，已为您复制地点名称', 'success');
+    copyToClipboard(poiName, amapURI);
+    return;
+  }
+
+  // 尝试唤起高德APP
+  const startTime = Date.now();
+  window.location.href = amapURI;
+
+  // 降级方案：如果800ms后页面还在，说明没有唤起APP
+  setTimeout(() => {
+    if (Date.now() - startTime < 2000) {
+      // 页面仍可见，走降级
+      copyToClipboard(poiName, amapURI);
+    }
+  }, 800);
+}
+
+function copyToClipboard(poiName, amapURI) {
+  // 优先使用 Clipboard API
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(poiName).then(() => {
+      showToast(`已复制「${poiName}」，请打开高德地图APP搜索导航`, 'success');
+    }).catch(() => {
+      fallbackCopy(poiName);
+    });
+  } else {
+    fallbackCopy(poiName);
+  }
+}
+
+/** 降级复制方案：创建临时textarea */
+function fallbackCopy(text) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.left = '-9999px';
+  textarea.style.top = '-9999px';
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+
+  try {
+    document.execCommand('copy');
+    showToast(`已复制「${text}」，请打开高德地图APP搜索导航`, 'success');
+  } catch (err) {
+    showToast('复制失败，请手动搜索：' + text);
+  }
+
+  document.body.removeChild(textarea);
+}
+
+/* ============================================================
+   Poster Generation — Canvas 海报生成
+   ============================================================ */
+
+function generatePoster() {
+  if (!currentCard) return;
+
+  const canvas = posterCanvas;
+  const ctx = canvas.getContext('2d');
+
+  const W = canvas.width;   // 750
+  const H = canvas.height;  // 1334
+
+  // Clear
+  ctx.clearRect(0, 0, W, H);
+
+  // --- Background (rice paper) ---
+  ctx.fillStyle = '#FFFEF9';
+  ctx.fillRect(0, 0, W, H);
+
+  // Paper texture
+  ctx.fillStyle = 'rgba(212,168,75,0.03)';
+  for (let i = 0; i < 200; i++) {
+    const x = Math.random() * W;
+    const y = Math.random() * H;
+    const r = Math.random() * 3 + 1;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // --- Top decorative bar ---
+  const topGrad = ctx.createLinearGradient(80, 0, W - 80, 0);
+  topGrad.addColorStop(0, 'rgba(255,70,31,0)');
+  topGrad.addColorStop(0.2, '#FF461F');
+  topGrad.addColorStop(0.5, '#FFB61E');
+  topGrad.addColorStop(0.8, '#FF461F');
+  topGrad.addColorStop(1, 'rgba(255,70,31,0)');
+  ctx.fillStyle = topGrad;
+  ctx.fillRect(80, 40, W - 160, 4);
+
+  // --- Title ---
+  ctx.fillStyle = '#FF461F';
+  ctx.font = 'bold 48px "Noto Serif SC", "STSong", "KaiTi", serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('长安汉服出片扭蛋机', W / 2, 120);
+
+  ctx.fillStyle = '#6B5A4E';
+  ctx.font = '24px "Noto Serif SC", "STSong", "KaiTi", serif';
+  ctx.fillText('穿汉服 · 游长安 · 出大片', W / 2, 160);
+
+  // --- Divider ---
+  ctx.strokeStyle = '#D4A84B';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([8, 6]);
+  ctx.beginPath();
+  ctx.moveTo(W / 2 - 120, 180);
+  ctx.lineTo(W / 2 + 120, 180);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // --- Persona ---
+  let yPos = 240;
+
+  // Diamond decorations
+  ctx.fillStyle = '#D4A84B';
+  ctx.font = '16px serif';
+  ctx.fillText('◆', W / 2 - 140, yPos + 18);
+  ctx.fillText('◆', W / 2 + 130, yPos + 18);
+
+  // Persona label with border
+  const personaText = currentCard.persona;
+  ctx.font = 'bold 56px "Noto Serif SC", "STSong", "KaiTi", serif';
+  const personaWidth = ctx.measureText(personaText).width;
+  const boxW = personaWidth + 80;
+  const boxH = 80;
+  const boxX = (W - boxW) / 2;
+  const boxY = yPos - 55;
+
+  ctx.fillStyle = 'rgba(255,70,31,0.06)';
+  ctx.fillRect(boxX, boxY, boxW, boxH);
+  ctx.strokeStyle = '#FF461F';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(boxX, boxY, boxW, boxH);
+
+  ctx.fillStyle = '#FF461F';
+  ctx.fillText(personaText, W / 2, yPos);
+
+  // Role tag
+  yPos += 36;
+  ctx.fillStyle = '#D4A84B';
+  ctx.font = '20px "Noto Serif SC", "STSong", "KaiTi", serif';
+  ctx.fillText(currentCard.roleTag, W / 2, yPos);
+
+  // --- Poses Section ---
+  yPos += 60;
+  ctx.fillStyle = '#D4A84B';
+  ctx.font = 'bold 28px "Noto Serif SC", "STSong", "KaiTi", serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('📸 出片姿势', 80, yPos);
+
+  ctx.strokeStyle = '#D4A84B';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(260, yPos - 8);
+  ctx.lineTo(W - 80, yPos - 8);
+  ctx.stroke();
+
+  yPos += 20;
+  ctx.fillStyle = '#3D2B1F';
+  ctx.font = '24px "Noto Serif SC", "STSong", "KaiTi", serif';
+
+  currentCard.poses.forEach((pose, i) => {
+    yPos += 52;
+
+    // Illustration frame
+    const illX = 80, illY = yPos - 10, illW = 70, illH = 90;
+
+    // Draw pre-rendered illustration from offscreen cache
+    const cachedCanvas = illCache[pose.ill];
+    if (cachedCanvas && cachedCanvas.width > 0) {
+      ctx.drawImage(cachedCanvas, illX, illY, illW, illH);
+    } else {
+      // Fallback: colored frame with pose type label
+      ctx.fillStyle = '#F5F0E8';
+      ctx.fillRect(illX, illY, illW, illH);
+      ctx.strokeStyle = 'rgba(212,168,75,0.4)';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(illX, illY, illW, illH);
+      const illNames = { lookback:'回眸', sidestand:'侧立', sit:'端坐', umbrella:'执伞', lean:'倚靠', squat:'蹲姿', fan:'持扇', walk:'行步', lookup:'仰首', bow:'低眉' };
+      ctx.fillStyle = '#D4A84B';
+      ctx.font = '16px "Noto Serif SC", serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(illNames[pose.ill] || '', illX + illW/2, illY + illH/2 + 6);
+      ctx.textAlign = 'left';
+    }
+
+    // Pose type label overlay on illustration
+    const illNames = { lookback:'回眸', sidestand:'侧立', sit:'端坐', umbrella:'执伞', lean:'倚靠', squat:'蹲姿', fan:'持扇', walk:'行步', lookup:'仰首', bow:'低眉' };
+    ctx.fillStyle = 'rgba(255,255,255,0.75)';
+    ctx.fillRect(illX + 2, illY + illH - 18, illW - 4, 16);
+    ctx.fillStyle = '#3D2B1F';
+    ctx.font = 'bold 11px "Noto Serif SC", serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(illNames[pose.ill] || '', illX + illW/2, illY + illH - 6);
+    ctx.textAlign = 'left';
+
+    // Number circle
+    ctx.fillStyle = '#FF461F';
+    ctx.beginPath();
+    ctx.arc(170, yPos, 14, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#FFF';
+    ctx.font = 'bold 16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(i + 1, 170, yPos + 5);
+    ctx.textAlign = 'left';
+
+    // Pose text
+    ctx.fillStyle = '#3D2B1F';
+    ctx.font = '24px "Noto Serif SC", "STSong", "KaiTi", serif';
+    const words = pose.text;
+    const maxWidth = W - 210;
+    const lines = wrapText(ctx, words, maxWidth);
+    lines.forEach((line, li) => {
+      ctx.fillText(line, 200, yPos + li * 34);
+    });
+    yPos += (lines.length - 1) * 34;
+  });
+
+  // --- Mantra ---
+  yPos += 50;
+  ctx.fillStyle = 'rgba(255,70,31,0.06)';
+  ctx.fillRect(80, yPos - 10, W - 160, 70);
+  ctx.fillStyle = '#FF461F';
+  ctx.strokeStyle = '#FF461F';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(80, yPos - 10);
+  ctx.lineTo(80, yPos + 60);
+  ctx.stroke();
+
+  ctx.fillStyle = '#6B5A4E';
+  ctx.font = '18px "Noto Serif SC", "STSong", "KaiTi", serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('— 情绪口诀 —', W / 2, yPos + 12);
+
+  ctx.fillStyle = '#D93A16';
+  ctx.font = 'bold 32px "Noto Serif SC", "STSong", "KaiTi", serif';
+  ctx.fillText('"' + currentCard.mantra + '"', W / 2, yPos + 48);
+
+  // --- Location ---
+  yPos += 100;
+  ctx.fillStyle = '#D4A84B';
+  ctx.font = 'bold 28px "Noto Serif SC", "STSong", "KaiTi", serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('📍 出片机位', 80, yPos);
+
+  yPos += 36;
+  ctx.fillStyle = '#3D2B1F';
+  ctx.font = '24px "Noto Serif SC", "STSong", "KaiTi", serif';
+  const locLines = wrapText(ctx, currentCard.location, W - 160);
+  locLines.forEach((line, i) => {
+    ctx.fillText(line, 80, yPos + i * 36);
+  });
+  yPos += locLines.length * 36 + 8;
+
+  ctx.fillStyle = '#6B5A4E';
+  ctx.font = '20px "Noto Serif SC", "STSong", "KaiTi", serif';
+  ctx.fillText('💡 ' + currentCard.tip, 80, yPos);
+
+  // --- Navi Section ---
+  yPos += 60;
+  ctx.fillStyle = '#FFF9ED';
+  ctx.fillRect(80, yPos, W - 160, 120);
+  ctx.strokeStyle = '#D4A84B';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(80, yPos, W - 160, 120);
+
+  ctx.fillStyle = '#6B5A4E';
+  ctx.font = '18px "Noto Serif SC", "STSong", "KaiTi", serif';
+  ctx.fillText('高德地图 · 精准导航', W / 2, yPos + 30);
+
+  ctx.fillStyle = '#3D2B1F';
+  ctx.font = 'bold 26px "Noto Serif SC", "STSong", "KaiTi", serif';
+  ctx.fillText('📍 ' + currentCard.poi, W / 2, yPos + 60);
+
+  ctx.fillStyle = '#1678FF';
+  ctx.font = '22px "Noto Serif SC", "STSong", "KaiTi", serif';
+  ctx.fillText('打开高德地图搜索上方地点', W / 2, yPos + 95);
+
+  // --- Footer ---
+  yPos += 180;
+  ctx.fillStyle = '#D4A84B';
+  ctx.font = '20px "Noto Serif SC", "STSong", "KaiTi", serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('🏮 长安十二时辰 · 你的大唐时刻 🏮', W / 2, yPos);
+
+  ctx.fillStyle = '#6B5A4E';
+  ctx.font = '16px "Noto Serif SC", "STSong", "KaiTi", serif';
+  ctx.fillText('扫码体验更多人设 →', W / 2, yPos + 36);
+
+  // --- Bottom divider ---
+  const bottomGrad = ctx.createLinearGradient(80, 0, W - 80, 0);
+  bottomGrad.addColorStop(0, 'rgba(255,70,31,0)');
+  bottomGrad.addColorStop(0.2, '#FF461F');
+  bottomGrad.addColorStop(0.5, '#FFB61E');
+  bottomGrad.addColorStop(0.8, '#FF461F');
+  bottomGrad.addColorStop(1, 'rgba(255,70,31,0)');
+  ctx.fillStyle = bottomGrad;
+  ctx.fillRect(80, yPos + 56, W - 160, 3);
+
+  // --- Export ---
+  canvas.toBlob(function(blob) {
+    const url = URL.createObjectURL(blob);
+
+    // 展示海报预览浮层（微信内可长按保存/分享到朋友圈/发送给朋友）
+    openPoster(url);
+
+    // 设置下载按钮
+    posterDownload.onclick = function() {
+      triggerDownload(url);
+    };
+
+  }, 'image/jpeg', 0.9);
+}
+
+/** 打开海报预览浮层 */
+function openPoster(url) {
+  // 清理上一次的 blob URL（如果用户连续生成海报）
+  if (currentPosterUrl) {
+    URL.revokeObjectURL(currentPosterUrl);
+  }
+  currentPosterUrl = url;
+
+  posterPreview.src = url;
+  posterOverlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+
+  // 根据环境显示不同提示
+  if (isWechat()) {
+    posterHint.innerHTML = '👆 <b>长按上方图片</b><br>发送给朋友 / 保存到相册 / 分享到朋友圈';
+  } else {
+    posterHint.innerHTML = '👆 <b>长按图片</b> 保存到相册<br>或点击下方按钮下载';
+  }
+}
+
+/** 关闭海报预览浮层 */
+function closePoster() {
+  posterOverlay.classList.remove('active');
+  document.body.style.overflow = '';
+  // 延迟清理 blob URL，确保图片已渲染
+  if (currentPosterUrl) {
+    const url = currentPosterUrl;
+    setTimeout(function() { URL.revokeObjectURL(url); }, 300);
+    currentPosterUrl = null;
+  }
+}
+
+// 点击遮罩关闭
+posterBackdrop.addEventListener('click', closePoster);
+// 关闭按钮
+posterCloseBtn.addEventListener('click', closePoster);
+
+/** Canvas文本自动换行 */
+function wrapText(ctx, text, maxWidth) {
+  const lines = [];
+  let currentLine = '';
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const testLine = currentLine + char;
+    const metrics = ctx.measureText(testLine);
+
+    if (metrics.width > maxWidth && currentLine.length > 0) {
+      lines.push(currentLine);
+      currentLine = char;
+    } else {
+      currentLine = testLine;
+    }
+  }
+
+  if (currentLine.length > 0) {
+    lines.push(currentLine);
+  }
+
+  return lines;
+}
+
+function triggerDownload(url) {
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '长安汉服出片_' + (currentCard ? currentCard.persona : '海报') + '.jpg';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+
+/* ============================================================
+   Illustration Pre-Rendering for Canvas Poster
+   ============================================================ */
+
+function preRenderIllustrations() {
+  const illKeys = ['lookback','sidestand','sit','umbrella','lean','squat','fan','walk','lookup','bow'];
+  const hiddenSvg = document.querySelector('svg[aria-hidden="true"]');
+
+  illKeys.forEach(key => {
+    const symbolEl = hiddenSvg.querySelector('#ill-' + key);
+    if (!symbolEl) return;
+
+    // Create offscreen canvas at 2x for retina quality
+    const c = document.createElement('canvas');
+    c.width = 140;   // 2x the poster target (70px)
+    c.height = 180;  // 2x the poster target (90px)
+    const cx = c.getContext('2d');
+
+    // Serialize SVG symbol to standalone data URI
+    const svgMarkup = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 120" width="140" height="180">'
+      + symbolEl.innerHTML
+      + '</svg>';
+    const dataUri = 'data:image/svg+xml,' + encodeURIComponent(svgMarkup);
+
+    // Draw to offscreen canvas
+    const img = new Image();
+    img.onload = () => {
+      cx.drawImage(img, 0, 0, 140, 180);
+      illCache[key] = c;
+    };
+    img.src = dataUri;
+  });
+}
+
+function loadAndDrawImage(url, ctx, x, y, w, h, canvas) {
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = () => {
+    ctx.drawImage(img, x, y, w, h);
+  };
+  img.onerror = () => { /* SVG fallback already drawn */ };
+  img.src = url;
+}
+
+/* ============================================================
+   Initialization
+   ============================================================ */
+
+function init() {
+  // Pre-render SVG illustrations for poster canvas
+  preRenderIllustrations();
+
+  // 微信环境显示提示
+  if (isWechat()) {
+    wechatHint.classList.add('show');
+  }
+
+  // 预渲染第一组内容（用于展示效果，但不自动弹出）
+  const preview = contentLibrary[Math.floor(Math.random() * contentLibrary.length)];
+  cardContent.innerHTML = renderCard(preview);
+
+  console.log('🏮 长安汉服出片扭蛋机 已就绪');
+  console.log('📚 已加载 ' + contentLibrary.length + ' 组大唐人设');
+  console.log('📍 所有POI均为高德地图真实可查标准名称');
+}
+
+// 启动
+init();
+</script>
+
+</body>
+</html>
