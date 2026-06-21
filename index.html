@@ -1653,6 +1653,12 @@ body {
   </defs>
 </svg>
 
+<!-- 图片放大灯箱 -->
+<div class="img-lightbox" id="imgLightbox" onclick="closeLightbox(event)">
+  <button class="lb-close" onclick="closeLightbox(event)">✕</button>
+  <img src="" alt="预览" id="lbImg">
+</div>
+
 <script>
 /* ============================================================
    Content Library — 20组完整人设数据
@@ -2703,12 +2709,6 @@ function init() {
 // 启动
 init();
 </script>
-
-<!-- 图片放大灯箱 -->
-<div class="img-lightbox" id="imgLightbox" onclick="closeLightbox(event)">
-  <button class="lb-close" onclick="closeLightbox(event)">✕</button>
-  <img src="" alt="预览" id="lbImg">
-</div>
 
 </body>
 </html>
