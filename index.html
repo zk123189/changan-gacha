@@ -688,7 +688,51 @@ body {
   height: 112px;
   object-fit: cover;
   border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.2s;
 }
+.pose-illustration img:hover { transform: scale(1.05); }
+
+/* 图片放大灯箱 */
+.img-lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0,0,0,0.92);
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.25s;
+}
+.img-lightbox.active { display: flex; }
+.img-lightbox img {
+  max-width: 92vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+  animation: zoomIn 0.3s;
+}
+.img-lightbox .lb-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.img-lightbox .lb-close:hover { background: rgba(255,255,255,0.35); }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes zoomIn { from{transform:scale(0.85);opacity:0} to{transform:scale(1);opacity:1} }
 
 /* 姿势文字区 */
 .pose-text-wrap {
@@ -2166,10 +2210,32 @@ cardModal.addEventListener('click', function(e) {
 
 // ESC 关闭
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape' && cardModal.classList.contains('active')) {
-    closeCard();
+  if (e.key === 'Escape') {
+    if (imgLightbox.classList.contains('active')) { closeLightbox(); return; }
+    if (cardModal.classList.contains('active')) { closeCard(); }
   }
 });
+
+/* ---------- 图片放大灯箱 ---------- */
+const imgLightbox = document.getElementById('imgLightbox');
+const lbImg        = document.getElementById('lbImg');
+
+// 卡片内点击图片 → 放大
+cardModal.addEventListener('click', function(e) {
+  const img = e.target.closest('.pose-illustration img');
+  if (!img) return;
+  e.stopPropagation();
+  lbImg.src = img.src;
+  imgLightbox.classList.add('active');
+  document.body.style.overflow = 'hidden';
+});
+
+function closeLightbox(e) {
+  if (e && e.target !== imgLightbox && e.target !== imgLightbox.querySelector('.lb-close')) return;
+  if (e) e.stopPropagation();
+  imgLightbox.classList.remove('active');
+  document.body.style.overflow = '';
+}
 
 /* ============================================================
    Amap Navigation — 高德地图深度集成
@@ -2641,6 +2707,12 @@ function init() {
 // 启动
 init();
 </script>
+
+<!-- 图片放大灯箱 -->
+<div class="img-lightbox" id="imgLightbox" onclick="closeLightbox(event)">
+  <button class="lb-close" onclick="closeLightbox(event)">✕</button>
+  <img src="" alt="预览" id="lbImg">
+</div>
 
 </body>
 </html>
